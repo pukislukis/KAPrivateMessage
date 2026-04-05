@@ -1,0 +1,44 @@
+# KAPrivateMessage Velocity Configuration
+
+# Anti-spam cooldown in seconds
+cooldown-seconds: 3
+
+# Default sound settings
+sounds:
+  default-send: "block.note_block.hat"
+  default-receive: "entity.experience_orb.pickup"
+  default-volume: 1.0
+  default-pitch: 1.0
+
+# Messages (MiniMessage format)
+messages:
+  prefix: "<#FF0090>[<b>KA-PM</b></#FF0090>] "
+  format-send: "<#FF0090>[<b>PM<reset><#FF0090>] <#d3d3d3>To {target}<#4d4d4d>: <#ffffff>{message}"
+  format-receive: "<#FF0090>[<b>PM<reset><#FF0090>] <#d3d3d3>From {sender}<#4d4d4d>: <#ffffff>{message}"
+  format-socialspy: "<gray>[SPY] <#FF0090>[<b>PM<reset><#FF0090>] <#d3d3d3>{sender} <gray>→ <#d3d3d3>{target}<#4d4d4d>: <#ffffff>{message}"
+  error-player-not-found: "<#ff1515>Player not found. (Min. 3 characters for nick search)"
+  error-usage-msg: "<#ff1515>Usage: <gray>/msg <player> <message>"
+  error-usage-reply: "<#ff1515>Usage: <gray>/reply <message>"
+  error-no-reply-target: "<#ff1515>You have no one to reply to."
+  error-player-offline: "<#ff1515>Player not found or is offline."
+  error-ignored-by-target: "<#ff1515>You cannot send a message because this player has ignored you."
+  error-ignoring-target: "<#ff1515>You are ignoring this player. Remove them from your ignore list to send messages."
+  error-privacy-restricted: "<#ff1515>This player has restricted private messages (Mode: <yellow>{mode}<#ff1515>)."
+  error-no-permission: "<#ff1515>You don't have permission to use this command."
+  error-cannot-msg-self: "<#ff1515>You cannot send a message to yourself."
+  privacy-updated: "<green>Privacy mode updated to: <yellow>{mode}"
+  sound-toggle-on: "<green>PM Sounds turned <bold>ON</bold><green>."
+  sound-toggle-off: "<green>PM Sounds turned <bold>OFF</bold><green>."
+  sound-gui-open: "<green>Opening sound selector GUI..."
+  ignore-added: "<green>You are now ignoring messages from <white>{player}<green>."
+  ignore-removed: "<green>You are no longer ignoring <white>{player}<green>."
+  ignore-already: "<#ff1515>{player} is already on your ignore list."
+  ignore-not-in-list: "<#ff1515>{player} is not in your ignore list."
+  ignore-list-empty: "<gray>Your ignore list is empty."
+  ignore-list-header: "<gold>Ignore List:"
+  ignore-list-entry: " <gray>- <white>{player}"
+  ignore-cleared: "<green>Ignore list cleared."
+  ignore-cannot-self: "<#ff1515>You cannot ignore yourself."
+  socialspy-on: "<green>Social Spy enabled."
+  socialspy-off: "<gray>Social Spy disabled."
+  cooldown: "<#ff1515>Please wait <yellow>{seconds}s<#ff1515> before sending another message."

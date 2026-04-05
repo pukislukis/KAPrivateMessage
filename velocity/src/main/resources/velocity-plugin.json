@@ -1,0 +1,8 @@
+{
+  "id": "kaprivatemessage",
+  "name": "KAPrivateMessage",
+  "version": "1.0.0",
+  "description": "Cross-platform Private Message plugin",
+  "authors": ["KalwiDevelopment"],
+  "main": "com.kalwidevelopment.kaprivatemessage.velocity.KAPrivateMessageVelocity"
+}

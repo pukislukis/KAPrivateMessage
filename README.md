@@ -8,7 +8,7 @@ Project ini memakai Maven multi-module:
 
 - `common` → shared constants + packet serializer
 - `velocity` → logic PM utama (command, privacy, ignore, social spy, anti-spam)
-- `paper` → backend bridge (sound playback, GUI selector, hooks PlaceholderAPI/MiniPlaceholders/Essentials)
+- `paper` → backend bridge (sound playback, GUI selector, hooks PlaceholderAPI/MiniPlaceholders/Essentials/LuckPerms)
 
 Komunikasi data proxy-backend menggunakan plugin messaging channel:
 
@@ -61,6 +61,7 @@ Contoh default format:
 - Proxy: **Velocity**
 - Backend: **Paper/Spigot-compatible** (plugin backend ada di module `paper`)
 - Disarankan EssentialsX jika ingin fitur nickname hook
+- **LuckPerms** disarankan/required jika ingin placeholder `{sender-prefix}` dan `{receiver-prefix}` terisi otomatis
 
 ### Build JAR
 1. Build project dari root:
@@ -110,7 +111,7 @@ database:
 - `server.id/name/formatted`  
   Dipakai untuk metadata server pada placeholder internal sender/receiver.
 - `bridge.send-prefix`  
-  Menentukan apakah prefix dikirim ke Velocity.
+  Menentukan apakah prefix dikirim ke Velocity (diambil dari LuckPerms jika tersedia, fallback kosong).
 - `bridge.send-nickname`  
   Menentukan apakah nickname Essentials dikirim ke Velocity.
 - `database.*`  
@@ -141,7 +142,7 @@ MiniPlaceholders namespace: `pm`
 
 ### Paper → Velocity (sync metadata pemain)
 Saat player join backend Paper:
-1. Paper baca nickname (Essentials), realname, prefix (jika diaktifkan), dan data server dari config.
+1. Paper baca nickname (Essentials), realname, prefix LuckPerms (jika diaktifkan), dan data server dari config.
 2. Paper kirim packet `NICKNAME_UPDATE` ke Velocity.
 3. Velocity simpan metadata player di memory cache.
 4. Saat `/msg` dieksekusi, formatter akan resolve placeholder sender/receiver dari cache ini.

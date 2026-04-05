@@ -17,6 +17,7 @@ Komunikasi data proxy-backend menggunakan plugin messaging channel:
 ## 2) Fitur Utama
 
 - PM lintas server: `/msg`, `/reply`
+- Support nama Bedrock (awalan `.`) saat target lookup
 - Smart targeting: nama asli → nick exact → nick partial (min 3 karakter)
 - Privacy mode: `None`, `Low`, `Medium`, `High`
 - Ignore system: `/ignore add|remove|list|clear`
@@ -80,6 +81,7 @@ Contoh default format:
 - Cek command tersedia:
   - `/msg`
   - `/reply`
+  - `/pmservers`
   - `/pmsound`
   - `/pmprivacy`
 
@@ -151,11 +153,20 @@ Saat player join backend Paper:
 - `PLAY_SOUND` untuk memainkan sound ke player tujuan.
 - `REQUEST_SOUND_GUI` untuk membuka sound selector GUI di backend tempat player berada.
 
+### Paper → Velocity (request command)
+- `PM_SEND_REQUEST` untuk meneruskan `/msg` dari backend Paper ke proxy Velocity.
+- `PM_SERVERS_REQUEST` untuk meminta daftar backend yang terkoneksi ke proxy.
+
+### Velocity → Paper (response command)
+- `PM_SERVERS_RESPONSE` untuk mengirim hasil daftar backend ke pemain requester di Paper.
+
 ## 8) Cara Menggunakan
 
 ### Penggunaan pemain
 - Kirim PM:
   - `/msg <player> <message>`
+- Cek backend yang terhubung ke proxy:
+  - `/pmservers`
 - Balas PM terakhir:
   - `/reply <message>`
 - Atur privasi PM:
@@ -183,6 +194,7 @@ Saat player join backend Paper:
 - `/pmprivacy <High|Medium|Low|None>`
 - `/pmsound toggle <on|off>`
 - `/pmsound gui`
+- `/pmservers`
 - `/ignore add|remove|list|clear [player]`
 - `/adminignore list|clear <player>`
 - `/socialspy [on|off]`
@@ -219,3 +231,17 @@ Semua format di atas bisa dikombinasikan dalam satu pesan.
   - `kaprivatemessage.pm.color`
 
 Jika player **tidak** punya permission ini, isi PM dikirim sebagai teks biasa (tanpa parsing color code), sementara format default template PM plugin tetap berjalan normal.
+
+## 12) Debug Logging
+
+Di `velocity/config.yml`, tersedia:
+
+```yaml
+debug: false
+```
+
+Jika `true`, plugin akan log debug untuk alur PM:
+- request PM masuk (velocity command / paper bridge)
+- gagal kirim PM (target tidak ditemukan, self-message, cooldown, ignore, privacy)
+- PM sukses terkirim
+- distribusi social spy

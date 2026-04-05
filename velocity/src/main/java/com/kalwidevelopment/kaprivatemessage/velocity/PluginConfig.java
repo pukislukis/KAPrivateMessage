@@ -17,6 +17,7 @@ public class PluginConfig {
     private String defaultSoundReceive = "entity.experience_orb.pickup";
     private double defaultVolume = 1.0;
     private double defaultPitch = 1.0;
+    private boolean debugEnabled = false;
 
     private Map<String, Object> messages;
 
@@ -47,6 +48,8 @@ public class PluginConfig {
             if (raw != null) {
                 Object cd = raw.get("cooldown-seconds");
                 if (cd instanceof Number) cooldownSeconds = ((Number) cd).intValue();
+                Object debug = raw.get("debug");
+                if (debug instanceof Boolean) debugEnabled = (Boolean) debug;
                 Map<String, Object> sounds = (Map<String, Object>) raw.get("sounds");
                 if (sounds != null) {
                     Object ds = sounds.get("default-send");
@@ -76,4 +79,5 @@ public class PluginConfig {
     public String getDefaultSoundReceive() { return defaultSoundReceive; }
     public double getDefaultVolume() { return defaultVolume; }
     public double getDefaultPitch() { return defaultPitch; }
+    public boolean isDebugEnabled() { return debugEnabled; }
 }

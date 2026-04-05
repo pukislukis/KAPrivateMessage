@@ -1,6 +1,8 @@
 package com.kalwidevelopment.kaprivatemessage.paper;
 
 import com.kalwidevelopment.kaprivatemessage.common.Constants;
+import com.kalwidevelopment.kaprivatemessage.paper.command.PaperMessageCommand;
+import com.kalwidevelopment.kaprivatemessage.paper.command.PaperServersCommand;
 import com.kalwidevelopment.kaprivatemessage.paper.gui.SoundSelectorGUI;
 import com.kalwidevelopment.kaprivatemessage.paper.hook.EssentialsHook;
 import com.kalwidevelopment.kaprivatemessage.paper.hook.LuckPermsHook;
@@ -38,6 +40,12 @@ public class KAPrivateMessagePaper extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new PlayerNicknameListener(this, essentialsHook, luckPermsHook), this);
         getServer().getPluginManager().registerEvents(soundSelectorGUI, this);
+        if (getCommand("msg") != null) {
+            getCommand("msg").setExecutor(new PaperMessageCommand(this));
+        }
+        if (getCommand("pmservers") != null) {
+            getCommand("pmservers").setExecutor(new PaperServersCommand(this));
+        }
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlaceholderAPIHook(this).register();

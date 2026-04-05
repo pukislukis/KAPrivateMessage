@@ -56,6 +56,24 @@ public class PluginMessageListener implements org.bukkit.plugin.messaging.Plugin
                         Bukkit.getScheduler().runTask(plugin, () -> soundSelectorGUI.openGUI(target));
                     }
                 }
+                case Constants.PACKET_PM_SERVERS_RESPONSE -> {
+                    UUID requesterUUID = UUID.fromString(packet.get("requesterUUID").getAsString());
+                    String servers = packet.has("servers") ? packet.get("servers").getAsString() : "";
+                    Player requester = Bukkit.getPlayer(requesterUUID);
+                    if (requester != null && requester.isOnline()) {
+                        requester.sendMessage("Connected backend servers:");
+                        if (servers.isEmpty()) {
+                            requester.sendMessage("- (none)");
+                        } else {
+                            for (String entry : servers.split(",")) {
+                                String[] parts = entry.split(":", 2);
+                                String serverName = parts.length > 0 ? parts[0] : "unknown";
+                                String playerCount = parts.length > 1 ? parts[1] : "0";
+                                requester.sendMessage("- " + serverName + " (" + playerCount + " player)");
+                            }
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             plugin.getLogger().warning("Error handling plugin message: " + e.getMessage());

@@ -2,6 +2,7 @@
 
 # Anti-spam cooldown in seconds
 cooldown-seconds: 3
+debug: false
 
 # Default sound settings
 sounds:

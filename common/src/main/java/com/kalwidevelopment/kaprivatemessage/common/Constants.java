@@ -13,6 +13,11 @@ public final class Constants {
     // Packet types Paper → Velocity
     public static final String PACKET_NICKNAME_UPDATE = "NICKNAME_UPDATE";
     public static final String PACKET_SOUND_SELECTED = "SOUND_SELECTED";
+    public static final String PACKET_PM_SEND_REQUEST = "PM_SEND_REQUEST";
+    public static final String PACKET_PM_SERVERS_REQUEST = "PM_SERVERS_REQUEST";
+
+    // Packet types Velocity → Paper
+    public static final String PACKET_PM_SERVERS_RESPONSE = "PM_SERVERS_RESPONSE";
 
     // Default sounds
     public static final String DEFAULT_SOUND_SEND = "block.note_block.hat";

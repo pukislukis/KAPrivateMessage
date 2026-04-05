@@ -18,6 +18,11 @@ public class PlayerFinder {
         // 1. Exact real name
         Optional<Player> byName = plugin.getServer().getPlayer(query);
         if (byName.isPresent()) return byName;
+        String normalizedQuery = normalizeName(query);
+        if (!normalizedQuery.equalsIgnoreCase(query)) {
+            Optional<Player> byNormalizedName = plugin.getServer().getPlayer(normalizedQuery);
+            if (byNormalizedName.isPresent()) return byNormalizedName;
+        }
 
         // 2. Exact nickname (case-insensitive) only for same-server targets
         String senderServer = sender == null ? "" : sender.getCurrentServer()
@@ -25,7 +30,8 @@ public class PlayerFinder {
             .orElse("");
         Map<UUID, String> nicks = plugin.getPlayerDataManager().getAllNicknames();
         for (Map.Entry<UUID, String> entry : nicks.entrySet()) {
-            if (entry.getValue().equalsIgnoreCase(query)) {
+            if (sender != null && entry.getKey().equals(sender.getUniqueId())) continue;
+            if (nameEquals(entry.getValue(), query)) {
                 Optional<Player> target = plugin.getServer().getPlayer(entry.getKey());
                 if (target.isEmpty()) continue;
                 if (sender == null || isSameServer(senderServer, target.get())) {
@@ -35,10 +41,12 @@ public class PlayerFinder {
         }
 
         // 3. Partial nickname (min 3 chars)
-        if (query.length() >= Constants.MIN_SEARCH_LENGTH) {
-            String lowerQuery = query.toLowerCase();
+        if (normalizedQuery.length() >= Constants.MIN_SEARCH_LENGTH) {
+            String lowerQuery = normalizedQuery.toLowerCase();
             for (Map.Entry<UUID, String> entry : nicks.entrySet()) {
-                if (entry.getValue().toLowerCase().contains(lowerQuery)) {
+                if (sender != null && entry.getKey().equals(sender.getUniqueId())) continue;
+                String normalizedNick = normalizeName(entry.getValue()).toLowerCase();
+                if (normalizedNick.contains(lowerQuery)) {
                     Optional<Player> target = plugin.getServer().getPlayer(entry.getKey());
                     if (target.isEmpty()) continue;
                     if (sender == null || isSameServer(senderServer, target.get())) {
@@ -48,7 +56,10 @@ public class PlayerFinder {
             }
             // 4. Partial real name
             for (Player p : plugin.getServer().getAllPlayers()) {
-                if (p.getUsername().toLowerCase().contains(lowerQuery)) {
+                if (sender != null && p.getUniqueId().equals(sender.getUniqueId())) continue;
+                String raw = p.getUsername().toLowerCase();
+                String normalized = normalizeName(p.getUsername()).toLowerCase();
+                if (raw.contains(query.toLowerCase()) || normalized.contains(lowerQuery)) {
                     return Optional.of(p);
                 }
             }
@@ -63,5 +74,16 @@ public class PlayerFinder {
             .map(c -> c.getServerInfo().getName())
             .orElse("");
         return senderServer.equalsIgnoreCase(targetServer);
+    }
+
+    private static String normalizeName(String name) {
+        if (name == null) return "";
+        if (name.startsWith(".")) return name.substring(1);
+        return name;
+    }
+
+    private static boolean nameEquals(String left, String right) {
+        if (left == null || right == null) return false;
+        return left.equalsIgnoreCase(right) || normalizeName(left).equalsIgnoreCase(normalizeName(right));
     }
 }

@@ -3,15 +3,21 @@ package com.kalwidevelopment.kaprivatemessage.velocity.messaging;
 import com.google.gson.JsonObject;
 import com.kalwidevelopment.kaprivatemessage.common.Constants;
 import com.kalwidevelopment.kaprivatemessage.common.PacketUtil;
+import com.kalwidevelopment.kaprivatemessage.velocity.command.MessageCommand;
 import com.kalwidevelopment.kaprivatemessage.velocity.KAPrivateMessageVelocity;
+import com.kalwidevelopment.kaprivatemessage.velocity.util.DebugLogger;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import org.slf4j.Logger;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class VelocityMessageBridge {
 
@@ -63,6 +69,27 @@ public class VelocityMessageBridge {
                     if (plugin != null) {
                         plugin.getPlayerDataManager().setSoundSettings(playerUUID, soundType, soundId, volume, pitch);
                     }
+                }
+                case Constants.PACKET_PM_SEND_REQUEST -> {
+                    if (plugin == null) break;
+                    UUID senderUUID = UUID.fromString(packet.get("senderUUID").getAsString());
+                    String targetName = packet.has("targetName") ? packet.get("targetName").getAsString() : "";
+                    String message = packet.has("message") ? packet.get("message").getAsString() : "";
+                    plugin.getServer().getPlayer(senderUUID).ifPresentOrElse(sender ->
+                        new MessageCommand(plugin).executeAs(sender, targetName, message, "paper-bridge"),
+                        () -> DebugLogger.log(plugin, "PM bridge request ignored, sender offline uuid=" + senderUUID)
+                    );
+                }
+                case Constants.PACKET_PM_SERVERS_REQUEST -> {
+                    if (plugin == null) break;
+                    UUID requesterUUID = UUID.fromString(packet.get("requesterUUID").getAsString());
+                    List<RegisteredServer> servers = plugin.getServer().getAllServers().stream()
+                        .sorted(Comparator.comparing(s -> s.getServerInfo().getName()))
+                        .collect(Collectors.toList());
+                    String serversPayload = servers.stream()
+                        .map(s -> s.getServerInfo().getName() + ":" + s.getPlayersConnected().size())
+                        .collect(Collectors.joining(","));
+                    sendToServer(requesterUUID, PacketUtil.pmServersResponsePacket(requesterUUID.toString(), serversPayload));
                 }
             }
         } catch (Exception e) {

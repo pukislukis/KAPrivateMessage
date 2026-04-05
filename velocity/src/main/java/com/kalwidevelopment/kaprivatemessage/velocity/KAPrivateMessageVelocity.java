@@ -90,6 +90,7 @@ public class KAPrivateMessageVelocity {
         IgnoreCommand ignoreCmd = new IgnoreCommand(this);
         AdminIgnoreCommand adminIgnoreCmd = new AdminIgnoreCommand(this);
         SocialSpyCommand socialSpyCmd = new SocialSpyCommand(this);
+        ProxyServersCommand proxyServersCommand = new ProxyServersCommand(this);
 
         server.getCommandManager().register(
             server.getCommandManager().metaBuilder("msg")
@@ -120,6 +121,10 @@ public class KAPrivateMessageVelocity {
         server.getCommandManager().register(
             server.getCommandManager().metaBuilder("socialspy").build(),
             socialSpyCmd
+        );
+        server.getCommandManager().register(
+            server.getCommandManager().metaBuilder("pmservers").build(),
+            proxyServersCommand
         );
     }
 

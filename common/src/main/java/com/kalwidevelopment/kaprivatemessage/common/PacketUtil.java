@@ -65,4 +65,28 @@ public final class PacketUtil {
         obj.addProperty("pitch", pitch);
         return obj;
     }
+
+    public static JsonObject pmSendRequestPacket(String senderUUID, String targetName, String message) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", Constants.PACKET_PM_SEND_REQUEST);
+        obj.addProperty("senderUUID", senderUUID);
+        obj.addProperty("targetName", targetName);
+        obj.addProperty("message", message);
+        return obj;
+    }
+
+    public static JsonObject pmServersRequestPacket(String requesterUUID) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", Constants.PACKET_PM_SERVERS_REQUEST);
+        obj.addProperty("requesterUUID", requesterUUID);
+        return obj;
+    }
+
+    public static JsonObject pmServersResponsePacket(String requesterUUID, String servers) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", Constants.PACKET_PM_SERVERS_RESPONSE);
+        obj.addProperty("requesterUUID", requesterUUID);
+        obj.addProperty("servers", servers);
+        return obj;
+    }
 }

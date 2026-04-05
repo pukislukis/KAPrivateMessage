@@ -13,6 +13,12 @@ softdepend:
   - LuckPerms
 
 commands:
+  msg:
+    description: Send private message through Velocity
+    usage: /msg <player> <message>
+  pmservers:
+    description: Check backend servers connected to Velocity
+    usage: /pmservers
   pmsound:
     description: Manage PM sound settings
     usage: /pmsound <gui|toggle> [on|off]

@@ -3,6 +3,7 @@ package com.kalwidevelopment.kaprivatemessage.velocity.command;
 import com.kalwidevelopment.kaprivatemessage.common.Constants;
 import com.kalwidevelopment.kaprivatemessage.common.PrivacyLevel;
 import com.kalwidevelopment.kaprivatemessage.velocity.KAPrivateMessageVelocity;
+import com.kalwidevelopment.kaprivatemessage.velocity.util.DebugLogger;
 import com.kalwidevelopment.kaprivatemessage.velocity.util.MessageColorUtil;
 import com.kalwidevelopment.kaprivatemessage.velocity.util.MessageFormatter;
 import com.kalwidevelopment.kaprivatemessage.velocity.util.PlayerFinder;
@@ -11,7 +12,11 @@ import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MessageCommand implements SimpleCommand {
@@ -38,16 +43,23 @@ public class MessageCommand implements SimpleCommand {
 
         String targetName = args[0];
         String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+        executeAs(sender, targetName, message, "velocity-command");
+    }
+
+    public void executeAs(Player sender, String targetName, String message, String source) {
+        DebugLogger.log(plugin, "PM request source=" + source + " sender=" + sender.getUsername() + " targetQuery=" + targetName);
 
         Optional<Player> targetOpt = PlayerFinder.find(plugin, targetName, sender);
         if (targetOpt.isEmpty()) {
             sender.sendMessage(MessageFormatter.parse(plugin.getPluginConfig().getMessage("error-player-not-found")));
+            DebugLogger.log(plugin, "PM failed: target not found sender=" + sender.getUsername() + " query=" + targetName);
             return;
         }
         Player target = targetOpt.get();
 
         if (target.getUniqueId().equals(sender.getUniqueId())) {
             sender.sendMessage(MessageFormatter.parse(plugin.getPluginConfig().getMessage("error-cannot-msg-self")));
+            DebugLogger.log(plugin, "PM blocked self-message sender=" + sender.getUsername() + " target=" + target.getUsername());
             return;
         }
 
@@ -57,16 +69,19 @@ public class MessageCommand implements SimpleCommand {
                 plugin.getPluginConfig().getMessage("cooldown"),
                 "{seconds}", String.valueOf(remaining)
             ));
+            DebugLogger.log(plugin, "PM blocked cooldown sender=" + sender.getUsername() + " remaining=" + remaining + "s");
             return;
         }
 
         if (plugin.getPlayerDataManager().isIgnoring(target.getUniqueId(), sender.getUniqueId())) {
             sender.sendMessage(MessageFormatter.parse(plugin.getPluginConfig().getMessage("error-ignored-by-target")));
+            DebugLogger.log(plugin, "PM blocked ignored-by-target sender=" + sender.getUsername() + " target=" + target.getUsername());
             return;
         }
 
         if (plugin.getPlayerDataManager().isIgnoring(sender.getUniqueId(), target.getUniqueId())) {
             sender.sendMessage(MessageFormatter.parse(plugin.getPluginConfig().getMessage("error-ignoring-target")));
+            DebugLogger.log(plugin, "PM blocked sender-ignoring-target sender=" + sender.getUsername() + " target=" + target.getUsername());
             return;
         }
 
@@ -76,6 +91,7 @@ public class MessageCommand implements SimpleCommand {
                 plugin.getPluginConfig().getMessage("error-privacy-restricted"),
                 "{mode}", mode.name()
             ));
+            DebugLogger.log(plugin, "PM blocked privacy sender=" + sender.getUsername() + " target=" + target.getUsername() + " mode=" + mode.name());
             return;
         }
 
@@ -88,7 +104,10 @@ public class MessageCommand implements SimpleCommand {
         Component spyMsg = MessageFormatter.formatSpyMessage(plugin, sender, target, finalMessage);
         for (UUID spyUUID : plugin.getSocialSpyManager().getSpies()) {
             if (spyUUID.equals(sender.getUniqueId()) || spyUUID.equals(target.getUniqueId())) continue;
-            plugin.getServer().getPlayer(spyUUID).ifPresent(spy -> spy.sendMessage(spyMsg));
+            plugin.getServer().getPlayer(spyUUID).ifPresent(spy -> {
+                spy.sendMessage(spyMsg);
+                DebugLogger.log(plugin, "Spy delivered to=" + spy.getUsername() + " sender=" + sender.getUsername() + " target=" + target.getUsername());
+            });
         }
 
         plugin.getPlayerDataManager().setReplyTarget(sender.getUniqueId(), target.getUniqueId());
@@ -97,24 +116,20 @@ public class MessageCommand implements SimpleCommand {
         plugin.getMessageBridge().playSound(target, "receive");
 
         plugin.getAntiSpamManager().recordMessage(sender.getUniqueId());
+        DebugLogger.log(plugin, "PM success sender=" + sender.getUsername() + " target=" + target.getUsername());
     }
 
     private boolean canSendPM(Player sender, Player target) {
         PrivacyLevel mode = plugin.getPlayerDataManager().getPrivacy(target.getUniqueId());
-        // HIGH: block all PMs — only staff with explicit bypass permission can send
         if (mode == PrivacyLevel.HIGH) {
             return sender.hasPermission(Constants.PERM_STAFF);
         }
-        // MEDIUM: restricted to trusted staff only (e.g., no donators); can be extended
-        //         with playtime checks via a separate permission or data lookup
         if (mode == PrivacyLevel.MEDIUM) {
             return sender.hasPermission(Constants.PERM_STAFF);
         }
-        // LOW: staff and donators can bypass; regular players are blocked
         if (mode == PrivacyLevel.LOW) {
             return sender.hasPermission(Constants.PERM_STAFF) || sender.hasPermission(Constants.PERM_DONATOR);
         }
-        // NONE: everyone can send
         return true;
     }
 

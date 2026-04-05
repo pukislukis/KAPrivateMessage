@@ -28,9 +28,8 @@ public class PlayerNicknameListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        byte[] data = PacketUtil.toBytes(PacketUtil.nicknameUpdatePacket(player.getUniqueId().toString(), ""));
-        player.sendPluginMessage(plugin, Constants.PLUGIN_CHANNEL, data);
+        // Nickname cache cleanup is handled by the proxy's DisconnectEvent listener.
+        // No plugin message needed here since the player connection is closing.
     }
 
     public void sendNicknameUpdate(Player player) {

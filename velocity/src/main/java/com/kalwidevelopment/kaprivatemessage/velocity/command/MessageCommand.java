@@ -97,10 +97,8 @@ public class MessageCommand implements SimpleCommand {
 
     private boolean canSendPM(Player sender, Player target) {
         PrivacyLevel mode = plugin.getPlayerDataManager().getPrivacy(target.getUniqueId());
-        if (mode == PrivacyLevel.HIGH) {
-            return sender.hasPermission(Constants.PERM_STAFF);
-        }
-        if (mode == PrivacyLevel.MEDIUM) {
+        // HIGH and MEDIUM both require staff; HIGH completely blocks non-staff, MEDIUM may be extended later
+        if (mode == PrivacyLevel.HIGH || mode == PrivacyLevel.MEDIUM) {
             return sender.hasPermission(Constants.PERM_STAFF);
         }
         if (mode == PrivacyLevel.LOW) {

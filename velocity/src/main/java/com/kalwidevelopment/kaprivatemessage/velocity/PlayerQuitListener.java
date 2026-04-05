@@ -25,5 +25,7 @@ public class PlayerQuitListener {
         java.util.UUID uuid = event.getPlayer().getUniqueId();
         antiSpamManager.cleanup(uuid);
         socialSpyManager.remove(uuid);
+        // Clear nickname cache on the proxy when player disconnects
+        playerDataManager.cacheNickname(uuid, null);
     }
 }

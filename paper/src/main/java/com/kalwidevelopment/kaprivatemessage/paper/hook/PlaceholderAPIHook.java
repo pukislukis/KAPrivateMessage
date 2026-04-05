@@ -32,6 +32,9 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
             case "status" -> "Active";
             case "plugin_name" -> "KAPrivateMessage";
             case "plugin_version" -> "1.0.0";
+            case "server_id" -> plugin.getPaperPluginConfig().getServerId();
+            case "server_name" -> plugin.getPaperPluginConfig().getServerName();
+            case "server_formatted" -> plugin.getPaperPluginConfig().getServerFormatted();
             default -> null;
         };
     }

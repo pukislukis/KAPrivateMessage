@@ -27,9 +27,18 @@ public class PlayerNicknameListener implements Listener {
 
     public void sendNicknameUpdate(Player player) {
         String nickname = essentialsHook.getStrippedNickname(player);
+        if (!plugin.getPaperPluginConfig().isSendNicknameInBridge()) {
+            nickname = "";
+        }
+        String prefix = plugin.getPaperPluginConfig().isSendPrefixInBridge() ? essentialsHook.getPrefix(player) : "";
         byte[] data = PacketUtil.toBytes(PacketUtil.nicknameUpdatePacket(
             player.getUniqueId().toString(),
-            nickname != null ? nickname : ""
+            nickname != null ? nickname : "",
+            player.getName(),
+            prefix,
+            plugin.getPaperPluginConfig().getServerId(),
+            plugin.getPaperPluginConfig().getServerName(),
+            plugin.getPaperPluginConfig().getServerFormatted()
         ));
         player.sendPluginMessage(plugin, Constants.PLUGIN_CHANNEL, data);
     }

@@ -1,0 +1,16 @@
+server:
+  id: "lobby-1"
+  name: "Lobby"
+  formatted: "<gray>[Lobby]</gray>"
+
+bridge:
+  send-prefix: true
+  send-nickname: true
+
+database:
+  type: "none" # none|mariadb|redis
+  host: "127.0.0.1"
+  port: 3306
+  name: "kaprivatemessage"
+  username: "root"
+  password: "change_me"

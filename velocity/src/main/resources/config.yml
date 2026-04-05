@@ -13,9 +13,9 @@ sounds:
 # Messages (MiniMessage format)
 messages:
   prefix: "<#FF0090>[<b>KA-PM</b></#FF0090>] "
-  format-send: "<#FF0090>[<b>PM<reset><#FF0090>] <#d3d3d3>To {target}<#4d4d4d>: <#ffffff>{message}"
-  format-receive: "<#FF0090>[<b>PM<reset><#FF0090>] <#d3d3d3>From {sender}<#4d4d4d>: <#ffffff>{message}"
-  format-socialspy: "<gray>[SPY] <#FF0090>[<b>PM<reset><#FF0090>] <#d3d3d3>{sender} <gray>→ <#d3d3d3>{target}<#4d4d4d>: <#ffffff>{message}"
+  format-send: "<#FF0090>[<b>PM<reset><#FF0090>] <#d3d3d3>To {receiver-prefix}{receiver-name} <gray>{receiver-server-formatted}<#4d4d4d>: <#ffffff>{message}"
+  format-receive: "<#FF0090>[<b>PM<reset><#FF0090>] <#d3d3d3>From {sender-prefix}{sender-name} <gray>{sender-server-formatted}<#4d4d4d>: <#ffffff>{message}"
+  format-socialspy: "<gray>[SPY] <#FF0090>[<b>PM<reset><#FF0090>] <#d3d3d3>{sender-name} <gray>({sender-server-id}) → <#d3d3d3>{receiver-name} <gray>({receiver-server-id})<#4d4d4d>: <#ffffff>{message}"
   error-player-not-found: "<#ff1515>Player not found. (Min. 3 characters for nick search)"
   error-usage-msg: "<#ff1515>Usage: <gray>/msg <player> <message>"
   error-usage-reply: "<#ff1515>Usage: <gray>/reply <message>"

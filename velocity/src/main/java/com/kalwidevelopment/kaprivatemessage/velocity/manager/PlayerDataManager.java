@@ -20,6 +20,7 @@ public class PlayerDataManager {
     private final Map<UUID, Set<UUID>> ignoreMap = new ConcurrentHashMap<>();
     private final Map<UUID, UUID> replyMap = new ConcurrentHashMap<>();
     private final Map<UUID, String> nicknameCache = new ConcurrentHashMap<>();
+    private final Map<UUID, PlayerMeta> playerMetaMap = new ConcurrentHashMap<>();
     private final Map<UUID, Boolean> soundToggle = new ConcurrentHashMap<>();
     private final Map<UUID, String> soundIdSend = new ConcurrentHashMap<>();
     private final Map<UUID, String> soundIdReceive = new ConcurrentHashMap<>();
@@ -176,6 +177,26 @@ public class PlayerDataManager {
             nicknameCache.put(uuid, nickname);
         }
     }
+
+    public void cachePlayerMeta(UUID uuid, String nickname, String realName, String prefix,
+                                String serverId, String serverName, String serverFormatted) {
+        cacheNickname(uuid, nickname);
+        playerMetaMap.put(uuid, new PlayerMeta(
+            normalize(realName),
+            normalize(prefix),
+            normalize(serverId),
+            normalize(serverName),
+            normalize(serverFormatted)
+        ));
+    }
+
+    public PlayerMeta getPlayerMeta(UUID uuid) {
+        return playerMetaMap.getOrDefault(uuid, PlayerMeta.EMPTY);
+    }
+
+    private String normalize(String value) {
+        return value == null ? "" : value;
+    }
     public Optional<String> getCachedNickname(UUID uuid) {
         return Optional.ofNullable(nicknameCache.get(uuid));
     }
@@ -214,5 +235,43 @@ public class PlayerDataManager {
             soundPitchReceive.put(uuid, pitch);
         }
         saveAsync();
+    }
+
+    public static class PlayerMeta {
+        public static final PlayerMeta EMPTY = new PlayerMeta("", "", "", "", "");
+
+        private final String realName;
+        private final String prefix;
+        private final String serverId;
+        private final String serverName;
+        private final String serverFormatted;
+
+        public PlayerMeta(String realName, String prefix, String serverId, String serverName, String serverFormatted) {
+            this.realName = realName;
+            this.prefix = prefix;
+            this.serverId = serverId;
+            this.serverName = serverName;
+            this.serverFormatted = serverFormatted;
+        }
+
+        public String getRealName() {
+            return realName;
+        }
+
+        public String getPrefix() {
+            return prefix;
+        }
+
+        public String getServerId() {
+            return serverId;
+        }
+
+        public String getServerName() {
+            return serverName;
+        }
+
+        public String getServerFormatted() {
+            return serverFormatted;
+        }
     }
 }

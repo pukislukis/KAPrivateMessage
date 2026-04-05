@@ -44,7 +44,14 @@ public class VelocityMessageBridge {
                     UUID playerUUID = UUID.fromString(packet.get("playerUUID").getAsString());
                     String nickname = packet.has("nickname") ? packet.get("nickname").getAsString() : null;
                     if (plugin != null) {
-                        plugin.getPlayerDataManager().cacheNickname(playerUUID, nickname);
+                        String realName = packet.has("realName") ? packet.get("realName").getAsString() : "";
+                        String prefix = packet.has("prefix") ? packet.get("prefix").getAsString() : "";
+                        String serverId = packet.has("serverId") ? packet.get("serverId").getAsString() : "";
+                        String serverName = packet.has("serverName") ? packet.get("serverName").getAsString() : "";
+                        String serverFormatted = packet.has("serverFormatted") ? packet.get("serverFormatted").getAsString() : "";
+                        plugin.getPlayerDataManager().cachePlayerMeta(
+                            playerUUID, nickname, realName, prefix, serverId, serverName, serverFormatted
+                        );
                     }
                 }
                 case Constants.PACKET_SOUND_SELECTED -> {

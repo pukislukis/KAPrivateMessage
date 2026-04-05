@@ -44,6 +44,17 @@ public final class PacketUtil {
         return obj;
     }
 
+    public static JsonObject nicknameUpdatePacket(String playerUUID, String nickname, String realName, String prefix,
+                                                  String serverId, String serverName, String serverFormatted) {
+        JsonObject obj = nicknameUpdatePacket(playerUUID, nickname);
+        obj.addProperty("realName", realName);
+        obj.addProperty("prefix", prefix);
+        obj.addProperty("serverId", serverId);
+        obj.addProperty("serverName", serverName);
+        obj.addProperty("serverFormatted", serverFormatted);
+        return obj;
+    }
+
     public static JsonObject soundSelectedPacket(String playerUUID, String soundType, String soundId, double volume, double pitch) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", Constants.PACKET_SOUND_SELECTED);

@@ -13,30 +13,19 @@ public class MessageFormatter {
 
     public static Component formatSendMessage(KAPrivateMessageVelocity plugin, Player sender, Player target, String message) {
         String template = plugin.getPluginConfig().getMessage("format-send");
-        String targetDisplay = getDisplayName(plugin, target);
-        String result = template
-            .replace("{sender}", getDisplayName(plugin, sender))
-            .replace("{target}", targetDisplay)
-            .replace("{message}", message);
+        String result = PlaceholderEngine.applyMessagePlaceholders(plugin, template, sender, target, message);
         return MM.deserialize(result);
     }
 
     public static Component formatReceiveMessage(KAPrivateMessageVelocity plugin, Player sender, Player target, String message) {
         String template = plugin.getPluginConfig().getMessage("format-receive");
-        String senderDisplay = getDisplayName(plugin, sender);
-        String result = template
-            .replace("{sender}", senderDisplay)
-            .replace("{target}", getDisplayName(plugin, target))
-            .replace("{message}", message);
+        String result = PlaceholderEngine.applyMessagePlaceholders(plugin, template, sender, target, message);
         return MM.deserialize(result);
     }
 
     public static Component formatSpyMessage(KAPrivateMessageVelocity plugin, Player sender, Player target, String message) {
         String template = plugin.getPluginConfig().getMessage("format-socialspy");
-        String result = template
-            .replace("{sender}", getDisplayName(plugin, sender))
-            .replace("{target}", getDisplayName(plugin, target))
-            .replace("{message}", message);
+        String result = PlaceholderEngine.applyMessagePlaceholders(plugin, template, sender, target, message);
         return MM.deserialize(result);
     }
 

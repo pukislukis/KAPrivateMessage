@@ -53,4 +53,8 @@ public class EssentialsHook {
             return null;
         }
     }
+
+    public String getPrefix(Player player) {
+        return "";
+    }
 }

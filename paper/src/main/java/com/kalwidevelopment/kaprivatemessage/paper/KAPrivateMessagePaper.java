@@ -15,9 +15,13 @@ public class KAPrivateMessagePaper extends JavaPlugin {
     private EssentialsHook essentialsHook;
     private SoundSelectorGUI soundSelectorGUI;
     private PluginMessageListener pluginMessageListener;
+    private PaperPluginConfig paperPluginConfig;
 
     @Override
     public void onEnable() {
+        paperPluginConfig = new PaperPluginConfig(this);
+        paperPluginConfig.load();
+
         essentialsHook = new EssentialsHook(this);
         essentialsHook.setup();
 
@@ -53,6 +57,7 @@ public class KAPrivateMessagePaper extends JavaPlugin {
 
     public EssentialsHook getEssentialsHook() { return essentialsHook; }
     public SoundSelectorGUI getSoundSelectorGUI() { return soundSelectorGUI; }
+    public PaperPluginConfig getPaperPluginConfig() { return paperPluginConfig; }
 
     public void sendPluginMessage(byte[] data) {
         getServer().getOnlinePlayers().stream().findFirst().ifPresent(player ->

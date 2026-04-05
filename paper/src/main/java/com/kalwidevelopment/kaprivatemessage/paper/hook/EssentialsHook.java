@@ -36,6 +36,7 @@ public class EssentialsHook {
             if (user == null) return null;
             String nick = user.getNickname();
             if (nick == null || nick.isEmpty()) return null;
+            // Strip legacy Minecraft color codes (§0-9, §a-f, §k-o, §r, §x) and MiniMessage tags
             return nick.replaceAll("§[0-9a-fk-orx]", "").replaceAll("<[^>]+>", "").trim();
         } catch (Exception e) {
             return null;

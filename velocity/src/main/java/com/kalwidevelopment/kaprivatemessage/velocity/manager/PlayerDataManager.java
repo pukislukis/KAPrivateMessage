@@ -8,6 +8,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerDataManager {
@@ -74,6 +75,10 @@ public class PlayerDataManager {
         }
     }
 
+    public void saveAsync() {
+        CompletableFuture.runAsync(this::save);
+    }
+
     public void save() {
         try {
             if (!Files.exists(dataDirectory)) Files.createDirectories(dataDirectory);
@@ -134,7 +139,7 @@ public class PlayerDataManager {
     }
     public void setPrivacy(UUID uuid, PrivacyLevel level) {
         privacyMap.put(uuid, level);
-        save();
+        saveAsync();
     }
 
     public Set<UUID> getIgnoreList(UUID uuid) {
@@ -142,15 +147,15 @@ public class PlayerDataManager {
     }
     public void addIgnore(UUID player, UUID ignored) {
         getIgnoreList(player).add(ignored);
-        save();
+        saveAsync();
     }
     public void removeIgnore(UUID player, UUID ignored) {
         getIgnoreList(player).remove(ignored);
-        save();
+        saveAsync();
     }
     public void clearIgnore(UUID player) {
         ignoreMap.remove(player);
-        save();
+        saveAsync();
     }
     public boolean isIgnoring(UUID player, UUID target) {
         return getIgnoreList(player).contains(target);
@@ -184,7 +189,7 @@ public class PlayerDataManager {
     public void setSoundEnabled(UUID uuid, boolean enabled) {
         if (enabled) soundToggle.remove(uuid);
         else soundToggle.put(uuid, false);
-        save();
+        saveAsync();
     }
     public String getSoundId(UUID uuid, String type) {
         if ("send".equals(type)) return soundIdSend.getOrDefault(uuid, Constants.DEFAULT_SOUND_SEND);
@@ -208,6 +213,6 @@ public class PlayerDataManager {
             soundVolReceive.put(uuid, volume);
             soundPitchReceive.put(uuid, pitch);
         }
-        save();
+        saveAsync();
     }
 }

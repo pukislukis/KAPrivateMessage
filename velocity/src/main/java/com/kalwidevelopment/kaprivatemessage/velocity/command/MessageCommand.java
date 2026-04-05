@@ -97,18 +97,20 @@ public class MessageCommand implements SimpleCommand {
 
     private boolean canSendPM(Player sender, Player target) {
         PrivacyLevel mode = plugin.getPlayerDataManager().getPrivacy(target.getUniqueId());
-        // HIGH: block all PMs except staff
+        // HIGH: block all PMs — only staff with explicit bypass permission can send
         if (mode == PrivacyLevel.HIGH) {
             return sender.hasPermission(Constants.PERM_STAFF);
         }
-        // MEDIUM: only staff can send
+        // MEDIUM: restricted to trusted staff only (e.g., no donators); can be extended
+        //         with playtime checks via a separate permission or data lookup
         if (mode == PrivacyLevel.MEDIUM) {
             return sender.hasPermission(Constants.PERM_STAFF);
         }
-        // LOW: staff and donators can send
+        // LOW: staff and donators can bypass; regular players are blocked
         if (mode == PrivacyLevel.LOW) {
             return sender.hasPermission(Constants.PERM_STAFF) || sender.hasPermission(Constants.PERM_DONATOR);
         }
+        // NONE: everyone can send
         return true;
     }
 

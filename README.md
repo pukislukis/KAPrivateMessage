@@ -55,7 +55,34 @@ Contoh default format:
 - `format-receive`: menampilkan sender prefix + name + server formatted
 - `format-socialspy`: menampilkan server id sender/receiver
 
-## 4) Konfigurasi Paper (`paper/config.yml`)
+## 4) Instalasi
+
+### Prasyarat
+- Proxy: **Velocity**
+- Backend: **Paper/Spigot-compatible** (plugin backend ada di module `paper`)
+- Disarankan EssentialsX jika ingin fitur nickname hook
+
+### Build JAR
+1. Build project dari root:
+   - `mvn clean package`
+2. Ambil hasil build:
+   - Proxy plugin: `velocity/target/*.jar`
+   - Backend plugin: `paper/target/*.jar`
+
+### Pasang ke server
+1. Copy JAR Velocity ke folder `plugins/` pada server proxy Velocity.
+2. Copy JAR Paper ke folder `plugins/` pada **setiap** backend server Paper yang terhubung ke Velocity.
+3. Restart proxy dan semua backend server.
+
+### Verifikasi instalasi
+- Pastikan plugin load tanpa error di console Velocity dan Paper.
+- Cek command tersedia:
+  - `/msg`
+  - `/reply`
+  - `/pmsound`
+  - `/pmprivacy`
+
+## 5) Konfigurasi Paper (`paper/config.yml`)
 
 Ditambahkan file config backend Paper:
 
@@ -89,7 +116,7 @@ database:
 - `database.*`  
   Disediakan untuk integrasi backend database (saat ini sebagai konfigurasi fondasi).
 
-## 5) Placeholder API Hook (Paper)
+## 6) Placeholder API Hook (Paper)
 
 Prefix PlaceholderAPI: `%pm_*%`
 
@@ -110,7 +137,7 @@ MiniPlaceholders namespace: `pm`
 - `<pm:server_name>`
 - `<pm:server_formatted>`
 
-## 6) Alur Data Proxy ↔ Backend
+## 7) Alur Data Proxy ↔ Backend
 
 ### Paper → Velocity (sync metadata pemain)
 Saat player join backend Paper:
@@ -123,7 +150,32 @@ Saat player join backend Paper:
 - `PLAY_SOUND` untuk memainkan sound ke player tujuan.
 - `REQUEST_SOUND_GUI` untuk membuka sound selector GUI di backend tempat player berada.
 
-## 7) Command Ringkas
+## 8) Cara Menggunakan
+
+### Penggunaan pemain
+- Kirim PM:
+  - `/msg <player> <message>`
+- Balas PM terakhir:
+  - `/reply <message>`
+- Atur privasi PM:
+  - `/pmprivacy <High|Medium|Low|None>`
+- Atur suara PM:
+  - `/pmsound toggle <on|off>`
+  - `/pmsound gui`
+- Ignore player:
+  - `/ignore add <player>`
+  - `/ignore remove <player>`
+  - `/ignore list`
+  - `/ignore clear`
+
+### Penggunaan admin/staff
+- Lihat PM lewat social spy:
+  - `/socialspy [on|off]`
+- Kelola ignore player (admin):
+  - `/adminignore list <player>`
+  - `/adminignore clear <player>`
+
+## 9) Command Ringkas
 
 - `/msg <player> <message>` (alias: w, tell, pm, m, t, whisper)
 - `/reply <message>` (alias: r)
@@ -134,7 +186,7 @@ Saat player join backend Paper:
 - `/adminignore list|clear <player>`
 - `/socialspy [on|off]`
 
-## 8) Detail Rules Nickname EssentialsX (Targeting vs Display)
+## 10) Detail Rules Nickname EssentialsX (Targeting vs Display)
 
 ### A. Saat sender dan target di server backend yang sama
 - Target bisa dicari pakai:
@@ -149,7 +201,7 @@ Saat player join backend Paper:
   - nickname jika pemain sedang nicked
   - realname jika tidak nicked
 
-## 9) Color Code pada Isi Private Message
+## 11) Color Code pada Isi Private Message
 
 Isi pesan `/msg` dan `/reply` sekarang mendukung color code berikut:
 

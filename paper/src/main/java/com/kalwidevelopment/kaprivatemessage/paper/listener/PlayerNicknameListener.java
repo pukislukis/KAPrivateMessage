@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerNicknameListener implements Listener {
 
@@ -24,12 +23,6 @@ public class PlayerNicknameListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> sendNicknameUpdate(player), 20L);
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        // Nickname cache cleanup is handled by the proxy's DisconnectEvent listener.
-        // No plugin message needed here since the player connection is closing.
     }
 
     public void sendNicknameUpdate(Player player) {

@@ -10,6 +10,7 @@ softdepend:
   - PlaceholderAPI
   - Essentials
   - MiniPlaceholders
+  - LuckPerms
 
 commands:
   pmsound:

@@ -3,6 +3,7 @@ package com.kalwidevelopment.kaprivatemessage.paper;
 import com.kalwidevelopment.kaprivatemessage.common.Constants;
 import com.kalwidevelopment.kaprivatemessage.paper.gui.SoundSelectorGUI;
 import com.kalwidevelopment.kaprivatemessage.paper.hook.EssentialsHook;
+import com.kalwidevelopment.kaprivatemessage.paper.hook.LuckPermsHook;
 import com.kalwidevelopment.kaprivatemessage.paper.hook.MiniPlaceholdersHook;
 import com.kalwidevelopment.kaprivatemessage.paper.hook.PlaceholderAPIHook;
 import com.kalwidevelopment.kaprivatemessage.paper.listener.PluginMessageListener;
@@ -13,6 +14,7 @@ import org.bukkit.plugin.messaging.Messenger;
 public class KAPrivateMessagePaper extends JavaPlugin {
 
     private EssentialsHook essentialsHook;
+    private LuckPermsHook luckPermsHook;
     private SoundSelectorGUI soundSelectorGUI;
     private PluginMessageListener pluginMessageListener;
     private PaperPluginConfig paperPluginConfig;
@@ -24,6 +26,8 @@ public class KAPrivateMessagePaper extends JavaPlugin {
 
         essentialsHook = new EssentialsHook(this);
         essentialsHook.setup();
+        luckPermsHook = new LuckPermsHook(this);
+        luckPermsHook.setup();
 
         soundSelectorGUI = new SoundSelectorGUI(this);
 
@@ -32,7 +36,7 @@ public class KAPrivateMessagePaper extends JavaPlugin {
         messenger.registerIncomingPluginChannel(this, Constants.PLUGIN_CHANNEL, pluginMessageListener);
         messenger.registerOutgoingPluginChannel(this, Constants.PLUGIN_CHANNEL);
 
-        getServer().getPluginManager().registerEvents(new PlayerNicknameListener(this, essentialsHook), this);
+        getServer().getPluginManager().registerEvents(new PlayerNicknameListener(this, essentialsHook, luckPermsHook), this);
         getServer().getPluginManager().registerEvents(soundSelectorGUI, this);
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -56,6 +60,7 @@ public class KAPrivateMessagePaper extends JavaPlugin {
     }
 
     public EssentialsHook getEssentialsHook() { return essentialsHook; }
+    public LuckPermsHook getLuckPermsHook() { return luckPermsHook; }
     public SoundSelectorGUI getSoundSelectorGUI() { return soundSelectorGUI; }
     public PaperPluginConfig getPaperPluginConfig() { return paperPluginConfig; }
 

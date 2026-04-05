@@ -43,6 +43,10 @@
             <id>miniplaceholders</id>
             <url>https://repo.william278.net/releases/</url>
         </repository>
+        <repository>
+            <id>luckperms</id>
+            <url>https://repo.lucko.me/</url>
+        </repository>
     </repositories>
 
     <dependencyManagement>

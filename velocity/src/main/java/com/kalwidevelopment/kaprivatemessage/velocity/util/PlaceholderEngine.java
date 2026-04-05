@@ -16,6 +16,16 @@ public final class PlaceholderEngine {
 
         PlayerDataManager.PlayerMeta senderMeta = plugin.getPlayerDataManager().getPlayerMeta(sender.getUniqueId());
         PlayerDataManager.PlayerMeta receiverMeta = plugin.getPlayerDataManager().getPlayerMeta(receiver.getUniqueId());
+        String senderPrefix = senderMeta.getPrefix();
+        String receiverPrefix = receiverMeta.getPrefix();
+        if (plugin.getLuckPermsHook() != null && plugin.getLuckPermsHook().isEnabled()) {
+            if (senderPrefix == null || senderPrefix.isEmpty()) {
+                senderPrefix = plugin.getLuckPermsHook().getPrefix(sender);
+            }
+            if (receiverPrefix == null || receiverPrefix.isEmpty()) {
+                receiverPrefix = plugin.getLuckPermsHook().getPrefix(receiver);
+            }
+        }
 
         String senderDisplay = MessageFormatter.getDisplayName(plugin, sender);
         String receiverDisplay = MessageFormatter.getDisplayName(plugin, receiver);
@@ -26,9 +36,9 @@ public final class PlaceholderEngine {
         put(values, "sender-realname", senderMeta.getRealName().isEmpty() ? sender.getUsername() : senderMeta.getRealName());
         put(values, "receiver-realname", receiverMeta.getRealName().isEmpty() ? receiver.getUsername() : receiverMeta.getRealName());
         put(values, "reciever-realname", receiverMeta.getRealName().isEmpty() ? receiver.getUsername() : receiverMeta.getRealName());
-        put(values, "sender-prefix", senderMeta.getPrefix());
-        put(values, "receiver-prefix", receiverMeta.getPrefix());
-        put(values, "reciever-prefix", receiverMeta.getPrefix());
+        put(values, "sender-prefix", senderPrefix);
+        put(values, "receiver-prefix", receiverPrefix);
+        put(values, "reciever-prefix", receiverPrefix);
         put(values, "sender-server-id", senderMeta.getServerId());
         put(values, "sender-server-name", senderMeta.getServerName());
         put(values, "sender-server-formatted", senderMeta.getServerFormatted());
@@ -54,4 +64,3 @@ public final class PlaceholderEngine {
         values.put(key, value == null ? "" : value);
     }
 }
-

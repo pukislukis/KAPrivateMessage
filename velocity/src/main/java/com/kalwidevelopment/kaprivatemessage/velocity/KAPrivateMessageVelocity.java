@@ -3,6 +3,7 @@ package com.kalwidevelopment.kaprivatemessage.velocity;
 import com.google.inject.Inject;
 import com.kalwidevelopment.kaprivatemessage.common.Constants;
 import com.kalwidevelopment.kaprivatemessage.velocity.command.*;
+import com.kalwidevelopment.kaprivatemessage.velocity.hook.LuckPermsHook;
 import com.kalwidevelopment.kaprivatemessage.velocity.manager.AntiSpamManager;
 import com.kalwidevelopment.kaprivatemessage.velocity.manager.PlayerDataManager;
 import com.kalwidevelopment.kaprivatemessage.velocity.manager.SocialSpyManager;
@@ -36,6 +37,7 @@ public class KAPrivateMessageVelocity {
     private SocialSpyManager socialSpyManager;
     private AntiSpamManager antiSpamManager;
     private VelocityMessageBridge messageBridge;
+    private LuckPermsHook luckPermsHook;
 
     public static final MinecraftChannelIdentifier CHANNEL =
         MinecraftChannelIdentifier.from(Constants.PLUGIN_CHANNEL);
@@ -56,6 +58,8 @@ public class KAPrivateMessageVelocity {
         this.playerDataManager.load();
         this.socialSpyManager = new SocialSpyManager();
         this.antiSpamManager = new AntiSpamManager(config.getCooldownSeconds());
+        this.luckPermsHook = new LuckPermsHook(logger);
+        this.luckPermsHook.setup();
 
         this.messageBridge = new VelocityMessageBridge(server, logger);
         this.messageBridge.setPlugin(this);
@@ -126,4 +130,5 @@ public class KAPrivateMessageVelocity {
     public SocialSpyManager getSocialSpyManager() { return socialSpyManager; }
     public AntiSpamManager getAntiSpamManager() { return antiSpamManager; }
     public VelocityMessageBridge getMessageBridge() { return messageBridge; }
+    public LuckPermsHook getLuckPermsHook() { return luckPermsHook; }
 }

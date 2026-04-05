@@ -11,15 +11,26 @@ import java.util.UUID;
 public class PlayerFinder {
 
     public static Optional<Player> find(KAPrivateMessageVelocity plugin, String query) {
+        return find(plugin, query, null);
+    }
+
+    public static Optional<Player> find(KAPrivateMessageVelocity plugin, String query, Player sender) {
         // 1. Exact real name
         Optional<Player> byName = plugin.getServer().getPlayer(query);
         if (byName.isPresent()) return byName;
 
-        // 2. Exact nickname (case-insensitive)
+        // 2. Exact nickname (case-insensitive) only for same-server targets
+        String senderServer = sender == null ? "" : sender.getCurrentServer()
+            .map(c -> c.getServerInfo().getName())
+            .orElse("");
         Map<UUID, String> nicks = plugin.getPlayerDataManager().getAllNicknames();
         for (Map.Entry<UUID, String> entry : nicks.entrySet()) {
             if (entry.getValue().equalsIgnoreCase(query)) {
-                return plugin.getServer().getPlayer(entry.getKey());
+                Optional<Player> target = plugin.getServer().getPlayer(entry.getKey());
+                if (target.isEmpty()) continue;
+                if (sender == null || isSameServer(senderServer, target.get())) {
+                    return target;
+                }
             }
         }
 
@@ -28,7 +39,11 @@ public class PlayerFinder {
             String lowerQuery = query.toLowerCase();
             for (Map.Entry<UUID, String> entry : nicks.entrySet()) {
                 if (entry.getValue().toLowerCase().contains(lowerQuery)) {
-                    return plugin.getServer().getPlayer(entry.getKey());
+                    Optional<Player> target = plugin.getServer().getPlayer(entry.getKey());
+                    if (target.isEmpty()) continue;
+                    if (sender == null || isSameServer(senderServer, target.get())) {
+                        return target;
+                    }
                 }
             }
             // 4. Partial real name
@@ -40,5 +55,13 @@ public class PlayerFinder {
         }
 
         return Optional.empty();
+    }
+
+    private static boolean isSameServer(String senderServer, Player target) {
+        if (senderServer.isEmpty()) return true;
+        String targetServer = target.getCurrentServer()
+            .map(c -> c.getServerInfo().getName())
+            .orElse("");
+        return senderServer.equalsIgnoreCase(targetServer);
     }
 }

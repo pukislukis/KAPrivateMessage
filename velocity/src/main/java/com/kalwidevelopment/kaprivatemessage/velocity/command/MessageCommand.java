@@ -3,6 +3,7 @@ package com.kalwidevelopment.kaprivatemessage.velocity.command;
 import com.kalwidevelopment.kaprivatemessage.common.Constants;
 import com.kalwidevelopment.kaprivatemessage.common.PrivacyLevel;
 import com.kalwidevelopment.kaprivatemessage.velocity.KAPrivateMessageVelocity;
+import com.kalwidevelopment.kaprivatemessage.velocity.util.MessageColorUtil;
 import com.kalwidevelopment.kaprivatemessage.velocity.util.MessageFormatter;
 import com.kalwidevelopment.kaprivatemessage.velocity.util.PlayerFinder;
 import com.velocitypowered.api.command.SimpleCommand;
@@ -38,7 +39,7 @@ public class MessageCommand implements SimpleCommand {
         String targetName = args[0];
         String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
-        Optional<Player> targetOpt = PlayerFinder.find(plugin, targetName);
+        Optional<Player> targetOpt = PlayerFinder.find(plugin, targetName, sender);
         if (targetOpt.isEmpty()) {
             sender.sendMessage(MessageFormatter.parse(plugin.getPluginConfig().getMessage("error-player-not-found")));
             return;
@@ -78,10 +79,13 @@ public class MessageCommand implements SimpleCommand {
             return;
         }
 
-        sender.sendMessage(MessageFormatter.formatSendMessage(plugin, sender, target, message));
-        target.sendMessage(MessageFormatter.formatReceiveMessage(plugin, sender, target, message));
+        boolean canUseColors = sender.hasPermission(Constants.PERM_PM_COLOR);
+        String finalMessage = MessageColorUtil.applyPlayerMessageColors(message, canUseColors);
 
-        Component spyMsg = MessageFormatter.formatSpyMessage(plugin, sender, target, message);
+        sender.sendMessage(MessageFormatter.formatSendMessage(plugin, sender, target, finalMessage));
+        target.sendMessage(MessageFormatter.formatReceiveMessage(plugin, sender, target, finalMessage));
+
+        Component spyMsg = MessageFormatter.formatSpyMessage(plugin, sender, target, finalMessage);
         for (UUID spyUUID : plugin.getSocialSpyManager().getSpies()) {
             if (spyUUID.equals(sender.getUniqueId()) || spyUUID.equals(target.getUniqueId())) continue;
             plugin.getServer().getPlayer(spyUUID).ifPresent(spy -> spy.sendMessage(spyMsg));

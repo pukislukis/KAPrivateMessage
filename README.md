@@ -133,3 +133,36 @@ Saat player join backend Paper:
 - `/ignore add|remove|list|clear [player]`
 - `/adminignore list|clear <player>`
 - `/socialspy [on|off]`
+
+## 8) Detail Rules Nickname EssentialsX (Targeting vs Display)
+
+### A. Saat sender dan target di server backend yang sama
+- Target bisa dicari pakai:
+  - realname
+  - nickname EssentialsX (exact / partial, min 3 char)
+- Di format PM, nama yang tampil mengikuti nickname aktif pemain (jika ada), kalau tidak ada fallback ke realname.
+
+### B. Saat sender dan target beda backend server (cross-server)
+- Target **harus** dicari dengan **realname**.
+- Pencarian dengan nickname tidak digunakan untuk target lintas server.
+- Di format PM, nama tampilan tetap:
+  - nickname jika pemain sedang nicked
+  - realname jika tidak nicked
+
+## 9) Color Code pada Isi Private Message
+
+Isi pesan `/msg` dan `/reply` sekarang mendukung color code berikut:
+
+- Legacy: `&a`, `&b`, `&c`, ..., `&l`, `&n`, `&o`, `&m`, `&k`, `&r`
+- Legacy Hex:
+  - format panjang: `&x&R&R&G&G&B&B`
+  - format pendek: `&#RRGGBB`
+
+Semua format di atas bisa dikombinasikan dalam satu pesan.
+
+### Permission
+
+- Permission untuk pakai color code:
+  - `kaprivatemessage.pm.color`
+
+Jika player **tidak** punya permission ini, isi PM dikirim sebagai teks biasa (tanpa parsing color code), sementara format default template PM plugin tetap berjalan normal.

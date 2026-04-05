@@ -25,4 +25,5 @@ public final class Constants {
     public static final String PERM_STAFF = "kaprivatemessage.pm.staff";
     public static final String PERM_DONATOR = "kaprivatemessage.pm.donator";
     public static final String PERM_SOCIALSPY = "kaprivatemessage.socialspy";
+    public static final String PERM_PM_COLOR = "kaprivatemessage.pm.color";
 }

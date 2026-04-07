@@ -118,10 +118,10 @@ public class SoundSelectorGUI implements Listener {
         for (Map<?, ?> itemMap : items) {
             int slot = toInt(itemMap.get("slot"), -1);
             if (slot < 0 || slot >= size) continue;
-            Material mat = parseMaterial(String.valueOf(itemMap.getOrDefault("material", "GRAY_STAINED_GLASS_PANE")));
-            String name = String.valueOf(itemMap.getOrDefault("name", "<white>Item"));
+            Material mat = parseMaterial(getString(itemMap, "material", "GRAY_STAINED_GLASS_PANE"));
+            String name = getString(itemMap, "name", "<white>Item");
             List<String> lore = toStringList(itemMap.get("lore"));
-            String action = String.valueOf(itemMap.getOrDefault("action", ""));
+            String action = getString(itemMap, "action", "");
             inv.setItem(slot, createItem(mat, name, lore));
             actionMap.put(slot, action);
         }
@@ -151,9 +151,9 @@ public class SoundSelectorGUI implements Listener {
         List<Map<?, ?>> sounds = cfg.getMapList("gui.sound-options");
         for (Map<?, ?> sound : sounds) {
             if (index >= size) break;
-            String soundId = String.valueOf(sound.getOrDefault("id", "entity.experience_orb.pickup"));
-            String name = String.valueOf(sound.getOrDefault("name", "<white>" + soundId));
-            String materialName = String.valueOf(sound.getOrDefault("material", "MUSIC_DISC_CAT"));
+            String soundId = getString(sound, "id", "entity.experience_orb.pickup");
+            String name = getString(sound, "name", "<white>" + soundId);
+            String materialName = getString(sound, "material", "MUSIC_DISC_CAT");
             List<String> lore = toStringList(sound.get("lore"));
             if (lore.isEmpty()) {
                 lore = Collections.singletonList("<gray>ID: <white>" + soundId);
@@ -170,10 +170,10 @@ public class SoundSelectorGUI implements Listener {
         for (Map<?, ?> itemMap : staticItems) {
             int slot = toInt(itemMap.get("slot"), -1);
             if (slot < 0 || slot >= size) continue;
-            Material mat = parseMaterial(String.valueOf(itemMap.getOrDefault("material", "BARRIER")));
-            String name = String.valueOf(itemMap.getOrDefault("name", "<red>Back"));
+            Material mat = parseMaterial(getString(itemMap, "material", "BARRIER"));
+            String name = getString(itemMap, "name", "<red>Back");
             List<String> lore = toStringList(itemMap.get("lore"));
-            String action = String.valueOf(itemMap.getOrDefault("action", ""));
+            String action = getString(itemMap, "action", "");
             inv.setItem(slot, createItem(mat, name, lore));
             actionMap.put(slot, action);
         }
@@ -277,6 +277,12 @@ public class SoundSelectorGUI implements Listener {
         } catch (Exception e) {
             return def;
         }
+    }
+
+    private String getString(Map<?, ?> map, String key, String def) {
+        Object value = map.get(key);
+        if (value == null) return def;
+        return String.valueOf(value);
     }
 
     private List<String> toStringList(Object raw) {

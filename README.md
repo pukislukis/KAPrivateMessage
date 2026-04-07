@@ -8,7 +8,7 @@ Project ini memakai Maven multi-module:
 
 - `common` → shared constants + packet serializer
 - `velocity` → logic PM utama (command, privacy, ignore, social spy, anti-spam)
-- `paper` → backend bridge (sound playback, GUI selector, hooks PlaceholderAPI/MiniPlaceholders/Essentials/LuckPerms)
+- `paper` → backend bridge (sound playback, Private Message Settings GUI, hooks PlaceholderAPI/MiniPlaceholders/Essentials/LuckPerms)
 
 Komunikasi data proxy-backend menggunakan plugin messaging channel:
 
@@ -23,7 +23,7 @@ Komunikasi data proxy-backend menggunakan plugin messaging channel:
 - Ignore system: `/ignore add|remove|list|clear`
 - Social Spy: `/socialspy`
 - Anti-spam cooldown
-- PM sound send/receive + GUI selector
+- PM sound send/receive + Private Message Settings GUI (PM Sound / PM Privacy / PM Ignores)
 
 ## 3) Placeholder Internal di Format Pesan
 
@@ -85,6 +85,8 @@ Contoh default format:
   - `/pmservers`
   - `/pmsound`
   - `/pmprivacy`
+  - `/pmsettings`
+  - `/pmreload`
 
 ## 5) Konfigurasi Paper (`paper/config.yml`)
 
@@ -152,14 +154,18 @@ Saat player join backend Paper:
 
 ### Velocity → Paper (audio/GUI)
 - `PLAY_SOUND` untuk memainkan sound ke player tujuan.
-- `REQUEST_SOUND_GUI` untuk membuka sound selector GUI di backend tempat player berada.
+- `REQUEST_SETTINGS_GUI` untuk membuka Private Message Settings GUI di backend tempat player berada.
 
 ### Paper → Velocity (request command)
 - `PM_SEND_REQUEST` untuk meneruskan `/msg` dari backend Paper ke proxy Velocity.
 - `PM_SERVERS_REQUEST` untuk meminta daftar backend yang terkoneksi ke proxy.
+- `PM_PRIVACY_SET` untuk mengubah privacy dari GUI.
+- `PM_IGNORES_LIST_REQUEST` untuk meminta daftar ignore dari GUI.
+- `PM_IGNORES_CLEAR` untuk clear ignore list dari GUI.
 
 ### Velocity → Paper (response command)
 - `PM_SERVERS_RESPONSE` untuk mengirim hasil daftar backend ke pemain requester di Paper.
+- `PM_IGNORES_LIST_RESPONSE` untuk mengirim hasil ignore list requester di Paper.
 
 ## 8) Cara Menggunakan
 
@@ -174,7 +180,8 @@ Saat player join backend Paper:
   - `/pmprivacy <High|Medium|Low|None>`
 - Atur suara PM:
   - `/pmsound toggle <on|off>`
-  - `/pmsound gui`
+  - `/pmsound gui` (membuka Private Message Settings)
+  - `/pmsettings`
 - Ignore player:
   - `/ignore add <player>`
   - `/ignore remove <player>`
@@ -187,6 +194,9 @@ Saat player join backend Paper:
 - Kelola ignore player (admin):
   - `/adminignore list <player>`
   - `/adminignore clear <player>`
+- Reload plugin:
+  - `/pmreload` (Velocity/Paper soft reload)
+  - `/pmreload hard` (Paper full reload, termasuk refresh jar binary)
 
 ## 9) Command Ringkas
 
@@ -195,10 +205,12 @@ Saat player join backend Paper:
 - `/pmprivacy <High|Medium|Low|None>`
 - `/pmsound toggle <on|off>`
 - `/pmsound gui`
+- `/pmsettings`
 - `/pmservers`
 - `/ignore add|remove|list|clear [player]`
 - `/adminignore list|clear <player>`
 - `/socialspy [on|off]`
+- `/pmreload [hard]`
 
 ## 10) Detail Rules Nickname EssentialsX (Targeting vs Display)
 

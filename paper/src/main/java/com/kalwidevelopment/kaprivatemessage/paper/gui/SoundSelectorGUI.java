@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -61,12 +62,15 @@ public class SoundSelectorGUI implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) return;
         UUID uuid = player.getUniqueId();
         Inventory tracked = openInventories.get(uuid);
-        if (tracked == null || !event.getInventory().equals(tracked)) return;
+        if (tracked == null || !event.getView().getTopInventory().equals(tracked)) return;
 
         event.setCancelled(true);
+        int rawSlot = event.getRawSlot();
+        if (rawSlot < 0 || rawSlot >= tracked.getSize()) return;
+
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
 
-        int slot = event.getSlot();
+        int slot = rawSlot;
         String action = slotActions.getOrDefault(uuid, Collections.emptyMap()).get(slot);
         if (action == null) return;
 
@@ -86,6 +90,19 @@ public class SoundSelectorGUI implements Listener {
             case "SELECT_SOUND" -> selectSound(player, slot);
             case "CLOSE" -> player.closeInventory();
             default -> {
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        Inventory tracked = openInventories.get(player.getUniqueId());
+        if (tracked == null || !event.getView().getTopInventory().equals(tracked)) return;
+        for (int rawSlot : event.getRawSlots()) {
+            if (rawSlot < tracked.getSize()) {
+                event.setCancelled(true);
+                return;
             }
         }
     }

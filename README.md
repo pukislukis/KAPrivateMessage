@@ -63,6 +63,7 @@ Contoh default format:
 - Backend: **Paper/Spigot-compatible** (plugin backend ada di module `paper`)
 - Disarankan EssentialsX jika ingin fitur nickname hook
 - **LuckPerms** disarankan/required jika ingin placeholder `{sender-prefix}` dan `{receiver-prefix}` terisi otomatis
+- Prefix player otomatis support format warna **MiniMessage** dan **legacy** (`&` / `§`, termasuk hex legacy)
 
 ### Build JAR
 1. Build project dari root:

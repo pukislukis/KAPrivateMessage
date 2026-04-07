@@ -26,6 +26,8 @@ public final class PlaceholderEngine {
                 receiverPrefix = plugin.getLuckPermsHook().getPrefix(receiver);
             }
         }
+        senderPrefix = normalizePrefix(senderPrefix);
+        receiverPrefix = normalizePrefix(receiverPrefix);
 
         String senderDisplay = MessageFormatter.getDisplayName(plugin, sender);
         String receiverDisplay = MessageFormatter.getDisplayName(plugin, receiver);
@@ -62,5 +64,41 @@ public final class PlaceholderEngine {
 
     private static void put(Map<String, String> values, String key, String value) {
         values.put(key, value == null ? "" : value);
+    }
+
+    private static String normalizePrefix(String prefix) {
+        if (prefix == null || prefix.isEmpty()) return "";
+        String out = prefix;
+        out = out.replace('§', '&');
+
+        // Legacy hex: &x&F&F&0&0&A&A -> <#FF00AA>
+        out = out.replaceAll("(?i)&x&([0-9a-f])&([0-9a-f])&([0-9a-f])&([0-9a-f])&([0-9a-f])&([0-9a-f])", "<#$1$2$3$4$5$6>");
+        // Compact legacy hex: &#FF00AA -> <#FF00AA>
+        out = out.replaceAll("(?i)&\\#([0-9a-f]{6})", "<#$1>");
+
+        out = out.replaceAll("(?i)&0", "<black>");
+        out = out.replaceAll("(?i)&1", "<dark_blue>");
+        out = out.replaceAll("(?i)&2", "<dark_green>");
+        out = out.replaceAll("(?i)&3", "<dark_aqua>");
+        out = out.replaceAll("(?i)&4", "<dark_red>");
+        out = out.replaceAll("(?i)&5", "<dark_purple>");
+        out = out.replaceAll("(?i)&6", "<gold>");
+        out = out.replaceAll("(?i)&7", "<gray>");
+        out = out.replaceAll("(?i)&8", "<dark_gray>");
+        out = out.replaceAll("(?i)&9", "<blue>");
+        out = out.replaceAll("(?i)&a", "<green>");
+        out = out.replaceAll("(?i)&b", "<aqua>");
+        out = out.replaceAll("(?i)&c", "<red>");
+        out = out.replaceAll("(?i)&d", "<light_purple>");
+        out = out.replaceAll("(?i)&e", "<yellow>");
+        out = out.replaceAll("(?i)&f", "<white>");
+        out = out.replaceAll("(?i)&k", "<obfuscated>");
+        out = out.replaceAll("(?i)&l", "<bold>");
+        out = out.replaceAll("(?i)&m", "<strikethrough>");
+        out = out.replaceAll("(?i)&n", "<underlined>");
+        out = out.replaceAll("(?i)&o", "<italic>");
+        out = out.replaceAll("(?i)&r", "<reset>");
+
+        return out;
     }
 }

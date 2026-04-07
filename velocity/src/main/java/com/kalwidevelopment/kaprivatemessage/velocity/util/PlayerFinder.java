@@ -78,8 +78,13 @@ public class PlayerFinder {
 
     private static String normalizeName(String name) {
         if (name == null) return "";
-        if (name.startsWith(".")) return name.substring(1);
-        return name;
+        String out = name;
+        if (out.startsWith(".")) out = out.substring(1);
+        out = out.replaceAll("(?i)[&§]x([&§][0-9a-f]){6}", "");
+        out = out.replaceAll("(?i)[&§]#[0-9a-f]{6}", "");
+        out = out.replaceAll("(?i)[&§][0-9a-fk-or]", "");
+        out = out.replaceAll("<[^>]+>", "");
+        return out.trim();
     }
 
     private static boolean nameEquals(String left, String right) {

@@ -2,6 +2,7 @@ package com.kalwidevelopment.kaprivatemessage.paper;
 
 import com.kalwidevelopment.kaprivatemessage.common.Constants;
 import com.kalwidevelopment.kaprivatemessage.paper.command.PaperMessageCommand;
+import com.kalwidevelopment.kaprivatemessage.paper.command.PaperReloadCommand;
 import com.kalwidevelopment.kaprivatemessage.paper.command.PaperServersCommand;
 import com.kalwidevelopment.kaprivatemessage.paper.gui.SoundSelectorGUI;
 import com.kalwidevelopment.kaprivatemessage.paper.hook.EssentialsHook;
@@ -10,6 +11,7 @@ import com.kalwidevelopment.kaprivatemessage.paper.hook.MiniPlaceholdersHook;
 import com.kalwidevelopment.kaprivatemessage.paper.hook.PlaceholderAPIHook;
 import com.kalwidevelopment.kaprivatemessage.paper.listener.PluginMessageListener;
 import com.kalwidevelopment.kaprivatemessage.paper.listener.PlayerNicknameListener;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
@@ -20,6 +22,7 @@ public class KAPrivateMessagePaper extends JavaPlugin {
     private SoundSelectorGUI soundSelectorGUI;
     private PluginMessageListener pluginMessageListener;
     private PaperPluginConfig paperPluginConfig;
+    private PlayerNicknameListener playerNicknameListener;
 
     @Override
     public void onEnable() {
@@ -38,13 +41,17 @@ public class KAPrivateMessagePaper extends JavaPlugin {
         messenger.registerIncomingPluginChannel(this, Constants.PLUGIN_CHANNEL, pluginMessageListener);
         messenger.registerOutgoingPluginChannel(this, Constants.PLUGIN_CHANNEL);
 
-        getServer().getPluginManager().registerEvents(new PlayerNicknameListener(this, essentialsHook, luckPermsHook), this);
+        playerNicknameListener = new PlayerNicknameListener(this, essentialsHook, luckPermsHook);
+        getServer().getPluginManager().registerEvents(playerNicknameListener, this);
         getServer().getPluginManager().registerEvents(soundSelectorGUI, this);
         if (getCommand("msg") != null) {
             getCommand("msg").setExecutor(new PaperMessageCommand(this));
         }
         if (getCommand("pmservers") != null) {
             getCommand("pmservers").setExecutor(new PaperServersCommand(this));
+        }
+        if (getCommand("pmreload") != null) {
+            getCommand("pmreload").setExecutor(new PaperReloadCommand(this));
         }
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -76,5 +83,16 @@ public class KAPrivateMessagePaper extends JavaPlugin {
         getServer().getOnlinePlayers().stream().findFirst().ifPresent(player ->
             player.sendPluginMessage(this, Constants.PLUGIN_CHANNEL, data)
         );
+    }
+
+    public void reloadPlugin() {
+        reloadConfig();
+        paperPluginConfig.load();
+        essentialsHook.setup();
+        luckPermsHook.setup();
+        soundSelectorGUI.reloadFromConfig();
+        for (Player player : getServer().getOnlinePlayers()) {
+            playerNicknameListener.sendNicknameUpdate(player);
+        }
     }
 }

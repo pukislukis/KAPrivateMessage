@@ -22,6 +22,9 @@ commands:
   pmsound:
     description: Manage PM sound settings
     usage: /pmsound <gui|toggle> [on|off]
+  pmreload:
+    description: Reload KAPrivateMessage Paper
+    usage: /pmreload [hard]
 
 permissions:
   kaprivatemessage.admin:

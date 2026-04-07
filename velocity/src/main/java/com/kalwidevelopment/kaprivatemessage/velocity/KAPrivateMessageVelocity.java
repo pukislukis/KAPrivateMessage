@@ -57,9 +57,7 @@ public class KAPrivateMessageVelocity {
         this.playerDataManager = new PlayerDataManager(dataDirectory, logger);
         this.playerDataManager.load();
         this.socialSpyManager = new SocialSpyManager();
-        this.antiSpamManager = new AntiSpamManager(config.getCooldownSeconds());
         this.luckPermsHook = new LuckPermsHook(logger);
-        this.luckPermsHook.setup();
 
         this.messageBridge = new VelocityMessageBridge(server, logger);
         this.messageBridge.setPlugin(this);
@@ -70,6 +68,7 @@ public class KAPrivateMessageVelocity {
         server.getEventManager().register(this, new PlayerQuitListener(playerDataManager, socialSpyManager, antiSpamManager));
 
         registerCommands();
+        reloadPlugin();
 
         logger.info("KAPrivateMessage (Velocity) v1.0.0 loaded!");
     }
@@ -91,6 +90,8 @@ public class KAPrivateMessageVelocity {
         AdminIgnoreCommand adminIgnoreCmd = new AdminIgnoreCommand(this);
         SocialSpyCommand socialSpyCmd = new SocialSpyCommand(this);
         ProxyServersCommand proxyServersCommand = new ProxyServersCommand(this);
+        ReloadCommand reloadCommand = new ReloadCommand(this);
+        SettingsCommand settingsCommand = new SettingsCommand(this);
 
         server.getCommandManager().register(
             server.getCommandManager().metaBuilder("msg")
@@ -126,6 +127,22 @@ public class KAPrivateMessageVelocity {
             server.getCommandManager().metaBuilder("pmservers").build(),
             proxyServersCommand
         );
+        server.getCommandManager().register(
+            server.getCommandManager().metaBuilder("pmreload").build(),
+            reloadCommand
+        );
+        server.getCommandManager().register(
+            server.getCommandManager().metaBuilder("pmsettings").build(),
+            settingsCommand
+        );
+    }
+
+    public void reloadPlugin() {
+        config.load();
+        antiSpamManager = new AntiSpamManager(config.getCooldownSeconds());
+        if (luckPermsHook != null) {
+            luckPermsHook.setup();
+        }
     }
 
     public ProxyServer getServer() { return server; }

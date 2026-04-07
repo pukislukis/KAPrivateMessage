@@ -36,6 +36,13 @@ public final class PacketUtil {
         return obj;
     }
 
+    public static JsonObject requestSettingsGuiPacket(String playerUUID) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", Constants.PACKET_REQUEST_SETTINGS_GUI);
+        obj.addProperty("playerUUID", playerUUID);
+        return obj;
+    }
+
     public static JsonObject nicknameUpdatePacket(String playerUUID, String nickname) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", Constants.PACKET_NICKNAME_UPDATE);
@@ -87,6 +94,36 @@ public final class PacketUtil {
         obj.addProperty("type", Constants.PACKET_PM_SERVERS_RESPONSE);
         obj.addProperty("requesterUUID", requesterUUID);
         obj.addProperty("servers", servers);
+        return obj;
+    }
+
+    public static JsonObject pmPrivacySetPacket(String playerUUID, String privacyLevel) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", Constants.PACKET_PM_PRIVACY_SET);
+        obj.addProperty("playerUUID", playerUUID);
+        obj.addProperty("privacyLevel", privacyLevel);
+        return obj;
+    }
+
+    public static JsonObject pmIgnoresListRequestPacket(String playerUUID) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", Constants.PACKET_PM_IGNORES_LIST_REQUEST);
+        obj.addProperty("playerUUID", playerUUID);
+        return obj;
+    }
+
+    public static JsonObject pmIgnoresClearPacket(String playerUUID) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", Constants.PACKET_PM_IGNORES_CLEAR);
+        obj.addProperty("playerUUID", playerUUID);
+        return obj;
+    }
+
+    public static JsonObject pmIgnoresListResponsePacket(String playerUUID, String players) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("type", Constants.PACKET_PM_IGNORES_LIST_RESPONSE);
+        obj.addProperty("playerUUID", playerUUID);
+        obj.addProperty("players", players);
         return obj;
     }
 }

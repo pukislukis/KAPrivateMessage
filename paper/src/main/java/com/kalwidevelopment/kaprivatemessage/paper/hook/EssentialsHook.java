@@ -36,8 +36,7 @@ public class EssentialsHook {
             if (user == null) return null;
             String nick = user.getNickname();
             if (nick == null || nick.isEmpty()) return null;
-            // Strip legacy Minecraft color codes (§0-9, §a-f, §k-o, §r, §x) and MiniMessage tags
-            return nick.replaceAll("§[0-9a-fk-orx]", "").replaceAll("<[^>]+>", "").trim();
+            return stripFormatting(nick);
         } catch (Exception e) {
             return null;
         }
@@ -56,5 +55,15 @@ public class EssentialsHook {
 
     public String getPrefix(Player player) {
         return "";
+    }
+
+    public static String stripFormatting(String input) {
+        if (input == null) return "";
+        String out = input;
+        out = out.replaceAll("(?i)[&§]x([&§][0-9a-f]){6}", "");
+        out = out.replaceAll("(?i)[&§]#[0-9a-f]{6}", "");
+        out = out.replaceAll("(?i)[&§][0-9a-fk-or]", "");
+        out = out.replaceAll("<[^>]+>", "");
+        return out.trim();
     }
 }

@@ -60,8 +60,8 @@ public class SoundCommand implements SimpleCommand {
             }
             case "gui" -> {
                 plugin.getMessageBridge().sendToServer(player,
-                    PacketUtil.requestSoundGuiPacket(player.getUniqueId().toString()));
-                player.sendMessage(MessageFormatter.parse(plugin.getPluginConfig().getMessage("sound-gui-open")));
+                    PacketUtil.requestSettingsGuiPacket(player.getUniqueId().toString()));
+                player.sendMessage(MessageFormatter.parse("<green>Opening Private Message Settings GUI..."));
             }
             case "setother" -> {
                 if (!player.hasPermission(Constants.PERM_ADMIN)) {

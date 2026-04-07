@@ -56,6 +56,13 @@ public class PluginMessageListener implements org.bukkit.plugin.messaging.Plugin
                         Bukkit.getScheduler().runTask(plugin, () -> soundSelectorGUI.openGUI(target));
                     }
                 }
+                case Constants.PACKET_REQUEST_SETTINGS_GUI -> {
+                    UUID playerUUID = UUID.fromString(packet.get("playerUUID").getAsString());
+                    Player target = Bukkit.getPlayer(playerUUID);
+                    if (target != null && target.isOnline()) {
+                        Bukkit.getScheduler().runTask(plugin, () -> soundSelectorGUI.openSettingsGUI(target));
+                    }
+                }
                 case Constants.PACKET_PM_SERVERS_RESPONSE -> {
                     UUID requesterUUID = UUID.fromString(packet.get("requesterUUID").getAsString());
                     String servers = packet.has("servers") ? packet.get("servers").getAsString() : "";
@@ -70,6 +77,21 @@ public class PluginMessageListener implements org.bukkit.plugin.messaging.Plugin
                                 String serverName = parts.length > 0 ? parts[0] : "unknown";
                                 String playerCount = parts.length > 1 ? parts[1] : "0";
                                 requester.sendMessage("- " + serverName + " (" + playerCount + " player)");
+                            }
+                        }
+                    }
+                }
+                case Constants.PACKET_PM_IGNORES_LIST_RESPONSE -> {
+                    UUID requesterUUID = UUID.fromString(packet.get("playerUUID").getAsString());
+                    String players = packet.has("players") ? packet.get("players").getAsString() : "";
+                    Player requester = Bukkit.getPlayer(requesterUUID);
+                    if (requester != null && requester.isOnline()) {
+                        requester.sendMessage("PM Ignore List:");
+                        if (players.isEmpty()) {
+                            requester.sendMessage("- (empty)");
+                        } else {
+                            for (String entry : players.split(",")) {
+                                requester.sendMessage("- " + entry);
                             }
                         }
                     }

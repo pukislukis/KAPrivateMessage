@@ -3,6 +3,7 @@ package com.kalwidevelopment.kaprivatemessage.velocity.messaging;
 import com.google.gson.JsonObject;
 import com.kalwidevelopment.kaprivatemessage.common.Constants;
 import com.kalwidevelopment.kaprivatemessage.common.PacketUtil;
+import com.kalwidevelopment.kaprivatemessage.common.PrivacyLevel;
 import com.kalwidevelopment.kaprivatemessage.velocity.command.MessageCommand;
 import com.kalwidevelopment.kaprivatemessage.velocity.KAPrivateMessageVelocity;
 import com.kalwidevelopment.kaprivatemessage.velocity.util.DebugLogger;
@@ -90,6 +91,25 @@ public class VelocityMessageBridge {
                         .map(s -> s.getServerInfo().getName() + ":" + s.getPlayersConnected().size())
                         .collect(Collectors.joining(","));
                     sendToServer(requesterUUID, PacketUtil.pmServersResponsePacket(requesterUUID.toString(), serversPayload));
+                }
+                case Constants.PACKET_PM_PRIVACY_SET -> {
+                    if (plugin == null) break;
+                    UUID playerUUID = UUID.fromString(packet.get("playerUUID").getAsString());
+                    String level = packet.has("privacyLevel") ? packet.get("privacyLevel").getAsString() : "NONE";
+                    plugin.getPlayerDataManager().setPrivacy(playerUUID, PrivacyLevel.fromString(level));
+                }
+                case Constants.PACKET_PM_IGNORES_LIST_REQUEST -> {
+                    if (plugin == null) break;
+                    UUID playerUUID = UUID.fromString(packet.get("playerUUID").getAsString());
+                    String names = plugin.getPlayerDataManager().getIgnoreList(playerUUID).stream()
+                        .map(uuid -> plugin.getServer().getPlayer(uuid).map(Player::getUsername).orElse(uuid.toString()))
+                        .collect(Collectors.joining(","));
+                    sendToServer(playerUUID, PacketUtil.pmIgnoresListResponsePacket(playerUUID.toString(), names));
+                }
+                case Constants.PACKET_PM_IGNORES_CLEAR -> {
+                    if (plugin == null) break;
+                    UUID playerUUID = UUID.fromString(packet.get("playerUUID").getAsString());
+                    plugin.getPlayerDataManager().clearIgnore(playerUUID);
                 }
             }
         } catch (Exception e) {

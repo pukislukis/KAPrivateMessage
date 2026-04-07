@@ -8,6 +8,7 @@ import com.kalwidevelopment.kaprivatemessage.paper.hook.LuckPermsHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerNicknameListener implements Listener {
@@ -26,6 +27,15 @@ public class PlayerNicknameListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> sendNicknameUpdate(player), 20L);
+    }
+
+    @EventHandler
+    public void onPotentialNickChange(PlayerCommandPreprocessEvent event) {
+        String msg = event.getMessage().toLowerCase();
+        if (msg.startsWith("/nick") || msg.startsWith("/nickname") || msg.startsWith("/essentials:nick")) {
+            Player player = event.getPlayer();
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> sendNicknameUpdate(player), 10L);
+        }
     }
 
     public void sendNicknameUpdate(Player player) {

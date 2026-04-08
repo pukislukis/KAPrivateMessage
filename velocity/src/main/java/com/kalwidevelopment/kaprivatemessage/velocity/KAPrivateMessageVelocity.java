@@ -65,7 +65,7 @@ public class KAPrivateMessageVelocity {
         server.getChannelRegistrar().register(CHANNEL);
 
         server.getEventManager().register(this, messageBridge);
-        server.getEventManager().register(this, new PlayerQuitListener(playerDataManager, socialSpyManager, antiSpamManager));
+        server.getEventManager().register(this, new PlayerQuitListener(playerDataManager, socialSpyManager, this::getAntiSpamManager));
 
         registerCommands();
         reloadPlugin();

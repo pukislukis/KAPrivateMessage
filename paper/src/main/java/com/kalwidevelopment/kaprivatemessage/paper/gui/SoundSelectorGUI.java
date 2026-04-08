@@ -111,6 +111,8 @@ public class SoundSelectorGUI implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player player)) return;
         UUID uuid = player.getUniqueId();
+        Inventory tracked = openInventories.get(uuid);
+        if (tracked == null || !event.getInventory().equals(tracked)) return;
         openInventories.remove(uuid);
         openMenu.remove(uuid);
         slotActions.remove(uuid);

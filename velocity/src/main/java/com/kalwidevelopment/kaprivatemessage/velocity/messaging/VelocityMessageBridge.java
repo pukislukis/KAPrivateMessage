@@ -136,4 +136,8 @@ public class VelocityMessageBridge {
         double pitch = plugin.getPlayerDataManager().getSoundPitch(uuid, soundType);
         sendToServer(player, PacketUtil.playSoundPacket(uuid.toString(), soundId, volume, pitch, soundType));
     }
+
+    public void logPrivateMessageCommand(Player sender, Player target, String message) {
+        sendToServer(sender, PacketUtil.pmCommandLogPacket(sender.getUsername(), target.getUsername(), message));
+    }
 }

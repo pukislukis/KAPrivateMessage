@@ -5,6 +5,7 @@ import com.kalwidevelopment.kaprivatemessage.common.Constants;
 import com.kalwidevelopment.kaprivatemessage.common.PacketUtil;
 import com.kalwidevelopment.kaprivatemessage.paper.KAPrivateMessagePaper;
 import com.kalwidevelopment.kaprivatemessage.paper.gui.SoundSelectorGUI;
+import com.kalwidevelopment.kaprivatemessage.paper.hook.CoreProtectHook;
 import com.kalwidevelopment.kaprivatemessage.paper.hook.EssentialsHook;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -17,11 +18,13 @@ public class PluginMessageListener implements org.bukkit.plugin.messaging.Plugin
     private final KAPrivateMessagePaper plugin;
     private final EssentialsHook essentialsHook;
     private final SoundSelectorGUI soundSelectorGUI;
+    private final CoreProtectHook coreProtectHook;
 
     public PluginMessageListener(KAPrivateMessagePaper plugin, EssentialsHook essentialsHook, SoundSelectorGUI soundSelectorGUI) {
         this.plugin = plugin;
         this.essentialsHook = essentialsHook;
         this.soundSelectorGUI = soundSelectorGUI;
+        this.coreProtectHook = new CoreProtectHook();
     }
 
     @Override
@@ -94,6 +97,14 @@ public class PluginMessageListener implements org.bukkit.plugin.messaging.Plugin
                                 requester.sendMessage("- " + entry);
                             }
                         }
+                    }
+                }
+                case Constants.PACKET_PM_COMMAND_LOG -> {
+                    String senderName = packet.has("senderName") ? packet.get("senderName").getAsString() : "";
+                    String targetName = packet.has("targetName") ? packet.get("targetName").getAsString() : "";
+                    String messageText = packet.has("message") ? packet.get("message").getAsString() : "";
+                    if (!senderName.isEmpty() && !targetName.isEmpty() && !messageText.isEmpty()) {
+                        coreProtectHook.logCommand(senderName, targetName, messageText);
                     }
                 }
             }

@@ -116,6 +116,7 @@ public class MessageCommand implements SimpleCommand {
         plugin.getMessageBridge().playSound(target, "receive");
 
         plugin.getAntiSpamManager().recordMessage(sender.getUniqueId());
+        plugin.getMessageBridge().logPrivateMessageCommand(sender, target, message);
         DebugLogger.log(plugin, "PM success sender=" + sender.getUsername() + " target=" + target.getUsername());
     }
 

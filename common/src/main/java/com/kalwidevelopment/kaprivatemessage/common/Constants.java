@@ -11,6 +11,7 @@ public final class Constants {
     public static final String PACKET_REQUEST_SOUND_GUI = "REQUEST_SOUND_GUI";
     public static final String PACKET_REQUEST_SETTINGS_GUI = "REQUEST_SETTINGS_GUI";
     public static final String PACKET_PM_IGNORES_LIST_RESPONSE = "PM_IGNORES_LIST_RESPONSE";
+    public static final String PACKET_PM_COMMAND_LOG = "PM_COMMAND_LOG";
 
     // Packet types Paper → Velocity
     public static final String PACKET_NICKNAME_UPDATE = "NICKNAME_UPDATE";

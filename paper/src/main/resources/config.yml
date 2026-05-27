@@ -1,0 +1,212 @@
+server:
+  id: "lobby-1"
+  name: "Lobby"
+  formatted: "<gray>[Lobby]</gray>"
+
+bridge:
+  send-prefix: true
+  send-nickname: true
+
+database:
+  type: "none" # none|mariadb|redis
+  host: "127.0.0.1"
+  port: 3306
+  name: "kaprivatemessage"
+  username: "root"
+  password: "change_me"
+
+gui:
+  menus:
+    settings-main:
+      title: "<#FF0090><b>Private Message Settings</b>"
+      size: 27
+      items:
+        - slot: 11
+          material: NOTE_BLOCK
+          name: "<#FF0090><b>PM Sound</b>"
+          lore:
+            - "<gray>Open PM sound settings"
+          action: "OPEN_SOUND_MENU"
+        - slot: 13
+          material: SHIELD
+          name: "<#FF0090><b>PM Privacy</b>"
+          lore:
+            - "<gray>Set who can PM you"
+          action: "OPEN_PRIVACY_MENU"
+        - slot: 15
+          material: PLAYER_HEAD
+          name: "<#FF0090><b>PM Ignores</b>"
+          lore:
+            - "<gray>Manage ignore list"
+          action: "OPEN_IGNORES_MENU"
+        - slot: 22
+          material: BARRIER
+          name: "<red><b>Close</b>"
+          lore: []
+          action: "CLOSE"
+    settings-sound-type:
+      title: "<#FF0090><b>PM Sound Settings</b>"
+      size: 27
+      items:
+        - slot: 11
+          material: PAPER
+          name: "<white><b>Send Sound</b>"
+          lore:
+            - "<gray>Set sound when you send PM"
+          action: "OPEN_SOUND_SEND"
+        - slot: 15
+          material: BOOK
+          name: "<white><b>Receive Sound</b>"
+          lore:
+            - "<gray>Set sound when you receive PM"
+          action: "OPEN_SOUND_RECEIVE"
+        - slot: 18
+          material: ARROW
+          name: "<yellow><b>Back</b>"
+          lore: []
+          action: "OPEN_MAIN_MENU"
+        - slot: 26
+          material: BARRIER
+          name: "<red><b>Close</b>"
+          lore: []
+          action: "CLOSE"
+    settings-sound-options:
+      title: "<#FF0090><b>Select PM Sound</b>"
+      size: 54
+      items:
+        - slot: 45
+          material: ARROW
+          name: "<yellow><b>Back</b>"
+          lore: []
+          action: "OPEN_SOUND_MENU"
+        - slot: 53
+          material: BARRIER
+          name: "<red><b>Close</b>"
+          lore: []
+          action: "CLOSE"
+    settings-privacy:
+      title: "<#FF0090><b>PM Privacy Settings</b>"
+      size: 27
+      items:
+        - slot: 10
+          material: RED_CONCRETE
+          name: "<red><b>HIGH</b>"
+          lore:
+            - "<gray>Only staff can PM you"
+          action: "SET_PRIVACY_HIGH"
+        - slot: 12
+          material: ORANGE_CONCRETE
+          name: "<gold><b>MEDIUM</b>"
+          lore:
+            - "<gray>Only staff can PM you"
+          action: "SET_PRIVACY_MEDIUM"
+        - slot: 14
+          material: LIME_CONCRETE
+          name: "<green><b>LOW</b>"
+          lore:
+            - "<gray>Staff and donator can PM you"
+          action: "SET_PRIVACY_LOW"
+        - slot: 16
+          material: WHITE_CONCRETE
+          name: "<white><b>NONE</b>"
+          lore:
+            - "<gray>Everyone can PM you"
+          action: "SET_PRIVACY_NONE"
+        - slot: 18
+          material: ARROW
+          name: "<yellow><b>Back</b>"
+          lore: []
+          action: "OPEN_MAIN_MENU"
+        - slot: 26
+          material: BARRIER
+          name: "<red><b>Close</b>"
+          lore: []
+          action: "CLOSE"
+    settings-ignores:
+      title: "<#FF0090><b>PM Ignore Settings</b>"
+      size: 27
+      items:
+        - slot: 11
+          material: BOOK
+          name: "<white><b>View Ignore List</b>"
+          lore:
+            - "<gray>Show your ignores in chat"
+          action: "REQUEST_IGNORE_LIST"
+        - slot: 15
+          material: LAVA_BUCKET
+          name: "<red><b>Clear Ignore List</b>"
+          lore:
+            - "<gray>Remove all ignored players"
+          action: "CLEAR_IGNORES"
+        - slot: 18
+          material: ARROW
+          name: "<yellow><b>Back</b>"
+          lore: []
+          action: "OPEN_MAIN_MENU"
+        - slot: 26
+          material: BARRIER
+          name: "<red><b>Close</b>"
+          lore: []
+          action: "CLOSE"
+
+  sound-options:
+    - id: "block.note_block.hat"
+      name: "<white>Note Block Hat"
+      material: "LIME_STAINED_GLASS_PANE"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "block.note_block.bell"
+      name: "<white>Note Block Bell"
+      material: "YELLOW_STAINED_GLASS_PANE"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "block.note_block.chime"
+      name: "<white>Note Block Chime"
+      material: "CYAN_STAINED_GLASS_PANE"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "block.note_block.flute"
+      name: "<white>Note Block Flute"
+      material: "BLUE_STAINED_GLASS_PANE"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "entity.experience_orb.pickup"
+      name: "<white>XP Orb Pickup"
+      material: "GREEN_STAINED_GLASS_PANE"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "entity.player.levelup"
+      name: "<white>Level Up"
+      material: "GOLD_INGOT"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "entity.villager.yes"
+      name: "<white>Villager Yes"
+      material: "EMERALD"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "ui.button.click"
+      name: "<white>Button Click"
+      material: "STONE_BUTTON"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "block.amethyst_block.hit"
+      name: "<white>Amethyst Hit"
+      material: "AMETHYST_SHARD"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "entity.enderman.teleport"
+      name: "<white>Enderman Teleport"
+      material: "ENDER_PEARL"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "entity.item.pickup"
+      name: "<white>Item Pickup"
+      material: "PAPER"
+      lore:
+        - "<gray>ID: <white>{sound-id}"
+    - id: "block.note_block.pling"
+      name: "<white>Note Block Pling"
+      material: "MUSIC_DISC_CAT"
+      lore:
+        - "<gray>ID: <white>{sound-id}"

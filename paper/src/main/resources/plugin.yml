@@ -1,0 +1,41 @@
+name: KAPrivateMessage
+version: 1.0.0
+main: com.kalwidevelopment.kaprivatemessage.paper.KAPrivateMessagePaper
+api-version: "1.20"
+description: Cross-platform Private Message plugin (Paper Backend)
+authors:
+  - KalwiDevelopment
+
+softdepend:
+  - PlaceholderAPI
+  - Essentials
+  - MiniPlaceholders
+  - LuckPerms
+
+commands:
+  msg:
+    description: Send private message through Velocity
+    usage: /msg <player> <message>
+  pmservers:
+    description: Check backend servers connected to Velocity
+    usage: /pmservers
+  pmsound:
+    description: Manage PM sound settings
+    usage: /pmsound <gui|toggle> [on|off]
+  pmreload:
+    description: Reload KAPrivateMessage Paper
+    usage: /pmreload [hard]
+
+permissions:
+  kaprivatemessage.admin:
+    description: Full admin access to KAPrivateMessage
+    default: op
+  kaprivatemessage.pm.staff:
+    description: Staff permission for PM privacy bypass
+    default: op
+  kaprivatemessage.pm.donator:
+    description: Donator permission for PM Low privacy bypass
+    default: false
+  kaprivatemessage.socialspy:
+    description: Permission to use Social Spy
+    default: op

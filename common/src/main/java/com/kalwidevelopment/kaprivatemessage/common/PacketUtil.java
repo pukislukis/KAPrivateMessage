@@ -127,9 +127,10 @@ public final class PacketUtil {
         return obj;
     }
 
-    public static JsonObject pmCommandLogPacket(String senderName, String targetName, String message) {
+    public static JsonObject pmCommandLogPacket(String senderUUID, String senderName, String targetName, String message) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", Constants.PACKET_PM_COMMAND_LOG);
+        obj.addProperty("senderUUID", senderUUID);
         obj.addProperty("senderName", senderName);
         obj.addProperty("targetName", targetName);
         obj.addProperty("message", message);

@@ -100,11 +100,18 @@ public class PluginMessageListener implements org.bukkit.plugin.messaging.Plugin
                     }
                 }
                 case Constants.PACKET_PM_COMMAND_LOG -> {
+                    String senderUUIDRaw = packet.has("senderUUID") ? packet.get("senderUUID").getAsString() : "";
                     String senderName = packet.has("senderName") ? packet.get("senderName").getAsString() : "";
                     String targetName = packet.has("targetName") ? packet.get("targetName").getAsString() : "";
                     String messageText = packet.has("message") ? packet.get("message").getAsString() : "";
-                    if (!senderName.isEmpty() && !targetName.isEmpty() && !messageText.isEmpty()) {
-                        coreProtectHook.logCommand(senderName, targetName, messageText);
+                    if (!senderUUIDRaw.isEmpty() && !senderName.isEmpty() && !targetName.isEmpty() && !messageText.isEmpty()) {
+                        Player sender = Bukkit.getPlayer(UUID.fromString(senderUUIDRaw));
+                        if (sender != null && sender.isOnline()) {
+                            boolean logged = coreProtectHook.logCommand(sender, targetName, messageText);
+                            if (logged) {
+                                plugin.getLogger().info("CoreProtect command log saved for PM sender=" + senderName + " target=" + targetName);
+                            }
+                        }
                     }
                 }
             }

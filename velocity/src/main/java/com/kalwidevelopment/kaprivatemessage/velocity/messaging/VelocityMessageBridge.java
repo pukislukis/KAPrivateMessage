@@ -138,6 +138,11 @@ public class VelocityMessageBridge {
     }
 
     public void logPrivateMessageCommand(Player sender, Player target, String message) {
-        sendToServer(sender, PacketUtil.pmCommandLogPacket(sender.getUsername(), target.getUsername(), message));
+        sendToServer(sender, PacketUtil.pmCommandLogPacket(
+            sender.getUniqueId().toString(),
+            sender.getUsername(),
+            target.getUsername(),
+            message
+        ));
     }
 }
